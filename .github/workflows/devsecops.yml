@@ -145,8 +145,10 @@ jobs:
 
       - name: Generar los lockfiles sin instalar paquetes
         run: |
+          npm install -g npm@11.7.0
           npm install --package-lock-only --ignore-scripts --no-audit --no-fund
-          npm install --package-lock-only --ignore-scripts --no-audit --no-fund --prefix frontend
+          cd frontend
+          npm install --package-lock-only --ignore-scripts --no-audit --no-fund
 
       - name: Instalar Syft y Grype con verificación de hash
         run: |
