@@ -1,0 +1,2669 @@
+{
+  "version": "2.6.2",
+  "release_version": "1.0",
+  "released_at": "2026-11-11",
+  "summary": {
+    "title": "OWASP Juice Shop",
+    "owner": "[Nombre del integrante 1]",
+    "description": "Fork de OWASP Juice Shop, tienda web vulnerable a propósito hecha con Node.js, TypeScript y Angular. Se ejecuta en un contenedor Docker con base SQLite, MarsDB y archivos locales.",
+    "id": 0
+  },
+  "detail": {
+    "contributors": [],
+    "diagrams": [
+      {
+        "id": 0,
+        "title": "Nivel 0 - Contexto",
+        "diagramType": "STRIDE",
+        "placeholder": "Contexto: Juice Shop como un solo proceso, sus actores y servicios externos.",
+        "thumbnail": "./public/content/images/thumbnail.stride.jpg",
+        "version": "2.6.2",
+        "cells": [
+          {
+            "position": {
+              "x": 20,
+              "y": 10
+            },
+            "size": {
+              "width": 210,
+              "height": 800
+            },
+            "attrs": {
+              "label": {
+                "text": "Internet y operación"
+              },
+              "body": {
+                "stroke": "#cc0000",
+                "strokeWidth": 3,
+                "strokeDasharray": "10 5"
+              }
+            },
+            "visible": true,
+            "shape": "trust-boundary-box",
+            "zIndex": -50,
+            "id": "6122d71e-3a3d-48c4-9eb2-9cb237df02c7",
+            "data": {
+              "type": "tm.BoundaryBox",
+              "name": "Internet y operación",
+              "description": "",
+              "isTrustBoundary": true,
+              "hasOpenThreats": false
+            }
+          },
+          {
+            "position": {
+              "x": 620,
+              "y": 10
+            },
+            "size": {
+              "width": 300,
+              "height": 800
+            },
+            "attrs": {
+              "label": {
+                "text": "Contenedor Docker"
+              },
+              "body": {
+                "stroke": "#cc0000",
+                "strokeWidth": 3,
+                "strokeDasharray": "10 5"
+              }
+            },
+            "visible": true,
+            "shape": "trust-boundary-box",
+            "zIndex": -50,
+            "id": "3204882b-c320-41da-984b-4152dbe0cc76",
+            "data": {
+              "type": "tm.BoundaryBox",
+              "name": "Contenedor Docker",
+              "description": "",
+              "isTrustBoundary": true,
+              "hasOpenThreats": false
+            }
+          },
+          {
+            "position": {
+              "x": 1290,
+              "y": 10
+            },
+            "size": {
+              "width": 240,
+              "height": 800
+            },
+            "attrs": {
+              "label": {
+                "text": "Servicios externos"
+              },
+              "body": {
+                "stroke": "#cc0000",
+                "strokeWidth": 3,
+                "strokeDasharray": "10 5"
+              }
+            },
+            "visible": true,
+            "shape": "trust-boundary-box",
+            "zIndex": -50,
+            "id": "1c2ceaaa-95ac-46a4-b257-8128c1aa36ac",
+            "data": {
+              "type": "tm.BoundaryBox",
+              "name": "Servicios externos",
+              "description": "",
+              "isTrustBoundary": true,
+              "hasOpenThreats": false
+            }
+          },
+          {
+            "position": {
+              "x": 50,
+              "y": 80
+            },
+            "size": {
+              "width": 150,
+              "height": 60
+            },
+            "attrs": {
+              "text": {
+                "text": "Visitante anónimo"
+              },
+              "body": {
+                "stroke": "#333333",
+                "strokeWidth": 1,
+                "strokeDasharray": null
+              }
+            },
+            "visible": true,
+            "shape": "actor",
+            "zIndex": 2,
+            "id": "f4d9bd8c-1d91-4c24-a389-1db363262813",
+            "data": {
+              "name": "Visitante anónimo",
+              "description": "",
+              "type": "tm.Actor",
+              "isTrustBoundary": false,
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "threats": [],
+              "hasOpenThreats": false,
+              "providesAuthentication": false
+            }
+          },
+          {
+            "position": {
+              "x": 50,
+              "y": 230
+            },
+            "size": {
+              "width": 150,
+              "height": 60
+            },
+            "attrs": {
+              "text": {
+                "text": "Cliente registrado"
+              },
+              "body": {
+                "stroke": "#333333",
+                "strokeWidth": 1,
+                "strokeDasharray": null
+              }
+            },
+            "visible": true,
+            "shape": "actor",
+            "zIndex": 3,
+            "id": "f13f2a4a-4040-4f85-a7ca-d4f471f8a7f4",
+            "data": {
+              "name": "Cliente registrado",
+              "description": "",
+              "type": "tm.Actor",
+              "isTrustBoundary": false,
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "threats": [],
+              "hasOpenThreats": false,
+              "providesAuthentication": false
+            }
+          },
+          {
+            "position": {
+              "x": 50,
+              "y": 380
+            },
+            "size": {
+              "width": 150,
+              "height": 60
+            },
+            "attrs": {
+              "text": {
+                "text": "Administrador"
+              },
+              "body": {
+                "stroke": "#333333",
+                "strokeWidth": 1,
+                "strokeDasharray": null
+              }
+            },
+            "visible": true,
+            "shape": "actor",
+            "zIndex": 4,
+            "id": "96c6f3de-309d-4d02-91b8-9f1c79941405",
+            "data": {
+              "name": "Administrador",
+              "description": "",
+              "type": "tm.Actor",
+              "isTrustBoundary": false,
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "threats": [],
+              "hasOpenThreats": false,
+              "providesAuthentication": false
+            }
+          },
+          {
+            "position": {
+              "x": 50,
+              "y": 530
+            },
+            "size": {
+              "width": 150,
+              "height": 60
+            },
+            "attrs": {
+              "text": {
+                "text": "Cliente B2B"
+              },
+              "body": {
+                "stroke": "#333333",
+                "strokeWidth": 1,
+                "strokeDasharray": null
+              }
+            },
+            "visible": true,
+            "shape": "actor",
+            "zIndex": 5,
+            "id": "42733acb-264f-4f2e-aea7-cf3792e5f0d5",
+            "data": {
+              "name": "Cliente B2B",
+              "description": "",
+              "type": "tm.Actor",
+              "isTrustBoundary": false,
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "threats": [],
+              "hasOpenThreats": false,
+              "providesAuthentication": false
+            }
+          },
+          {
+            "position": {
+              "x": 50,
+              "y": 680
+            },
+            "size": {
+              "width": 150,
+              "height": 60
+            },
+            "attrs": {
+              "text": {
+                "text": "Prometheus"
+              },
+              "body": {
+                "stroke": "#333333",
+                "strokeWidth": 1,
+                "strokeDasharray": null
+              }
+            },
+            "visible": true,
+            "shape": "actor",
+            "zIndex": 6,
+            "id": "a3e70631-3c7e-49dc-8936-04b27b2d9425",
+            "data": {
+              "name": "Prometheus",
+              "description": "",
+              "type": "tm.Actor",
+              "isTrustBoundary": false,
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "threats": [],
+              "hasOpenThreats": false,
+              "providesAuthentication": false
+            }
+          },
+          {
+            "position": {
+              "x": 670,
+              "y": 40
+            },
+            "size": {
+              "width": 200,
+              "height": 720
+            },
+            "attrs": {
+              "text": {
+                "text": "OWASP Juice Shop"
+              },
+              "body": {
+                "stroke": "#333333",
+                "strokeWidth": 1,
+                "strokeDasharray": null
+              }
+            },
+            "visible": true,
+            "shape": "process",
+            "zIndex": 7,
+            "id": "066d41ce-3d9c-473e-840e-4f75aa260cc8",
+            "data": {
+              "name": "OWASP Juice Shop",
+              "description": "Tienda web con frontend Angular, API REST en Express, base SQLite, MarsDB y archivos locales.",
+              "type": "tm.Process",
+              "isTrustBoundary": false,
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "threats": [],
+              "hasOpenThreats": false
+            }
+          },
+          {
+            "position": {
+              "x": 1335,
+              "y": 180
+            },
+            "size": {
+              "width": 150,
+              "height": 60
+            },
+            "attrs": {
+              "text": {
+                "text": "Servicio LLM"
+              },
+              "body": {
+                "stroke": "#333333",
+                "strokeWidth": 1,
+                "strokeDasharray": null
+              }
+            },
+            "visible": true,
+            "shape": "actor",
+            "zIndex": 8,
+            "id": "f2887af3-e350-4948-9ed8-669a73cdd5ce",
+            "data": {
+              "name": "Servicio LLM",
+              "description": "",
+              "type": "tm.Actor",
+              "isTrustBoundary": false,
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "threats": [],
+              "hasOpenThreats": false,
+              "providesAuthentication": false
+            }
+          },
+          {
+            "position": {
+              "x": 1335,
+              "y": 370
+            },
+            "size": {
+              "width": 150,
+              "height": 60
+            },
+            "attrs": {
+              "text": {
+                "text": "Webhook de soluciones"
+              },
+              "body": {
+                "stroke": "#333333",
+                "strokeWidth": 1,
+                "strokeDasharray": null
+              }
+            },
+            "visible": true,
+            "shape": "actor",
+            "zIndex": 9,
+            "id": "b163541a-ebff-447b-8fda-9333623c1f39",
+            "data": {
+              "name": "Webhook de soluciones",
+              "description": "",
+              "type": "tm.Actor",
+              "isTrustBoundary": false,
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "threats": [],
+              "hasOpenThreats": false,
+              "providesAuthentication": false
+            }
+          },
+          {
+            "position": {
+              "x": 1335,
+              "y": 560
+            },
+            "size": {
+              "width": 150,
+              "height": 60
+            },
+            "attrs": {
+              "text": {
+                "text": "Sitios externos"
+              },
+              "body": {
+                "stroke": "#333333",
+                "strokeWidth": 1,
+                "strokeDasharray": null
+              }
+            },
+            "visible": true,
+            "shape": "actor",
+            "zIndex": 10,
+            "id": "7e4a2210-9f1b-4106-8b46-60bb8c1ab168",
+            "data": {
+              "name": "Sitios externos",
+              "description": "",
+              "type": "tm.Actor",
+              "isTrustBoundary": false,
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "threats": [],
+              "hasOpenThreats": false,
+              "providesAuthentication": false
+            }
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "strokeWidth": 1,
+                "targetMarker": {
+                  "name": "block"
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 11,
+            "connector": "normal",
+            "data": {
+              "type": "tm.Flow",
+              "name": "Catálogo, búsqueda, registro y login",
+              "description": "",
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "protocol": "HTTP, JSON",
+              "isEncrypted": false,
+              "isPublicNetwork": true,
+              "hasOpenThreats": false,
+              "threats": [],
+              "isTrustBoundary": false
+            },
+            "id": "23dad99c-426d-4277-9329-d6106db76a0a",
+            "labels": [
+              {
+                "position": {
+                  "distance": 0.5,
+                  "offset": -20
+                },
+                "attrs": {
+                  "label": {
+                    "text": "Catálogo, búsqueda, registro y login\n(HTTP, JSON)"
+                  }
+                }
+              }
+            ],
+            "source": {
+              "cell": "f4d9bd8c-1d91-4c24-a389-1db363262813"
+            },
+            "target": {
+              "cell": "066d41ce-3d9c-473e-840e-4f75aa260cc8"
+            },
+            "vertices": [
+              {
+                "x": 245,
+                "y": 110
+              },
+              {
+                "x": 686,
+                "y": 110
+              }
+            ]
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "strokeWidth": 1,
+                "targetMarker": {
+                  "name": "block"
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 12,
+            "connector": "normal",
+            "data": {
+              "type": "tm.Flow",
+              "name": "Cesta, pedidos, pagos y perfil",
+              "description": "",
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "protocol": "HTTP, JSON",
+              "isEncrypted": false,
+              "isPublicNetwork": true,
+              "hasOpenThreats": false,
+              "threats": [],
+              "isTrustBoundary": false
+            },
+            "id": "24607e0a-eb4e-4cd9-9893-8e330cd01041",
+            "labels": [
+              {
+                "position": {
+                  "distance": 0.5,
+                  "offset": -20
+                },
+                "attrs": {
+                  "label": {
+                    "text": "Cesta, pedidos, pagos y perfil\n(HTTP, JSON)"
+                  }
+                }
+              }
+            ],
+            "source": {
+              "cell": "f13f2a4a-4040-4f85-a7ca-d4f471f8a7f4"
+            },
+            "target": {
+              "cell": "066d41ce-3d9c-473e-840e-4f75aa260cc8"
+            },
+            "vertices": [
+              {
+                "x": 245,
+                "y": 230
+              },
+              {
+                "x": 657,
+                "y": 230
+              }
+            ]
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "strokeWidth": 1,
+                "targetMarker": {
+                  "name": "block"
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 13,
+            "connector": "normal",
+            "data": {
+              "type": "tm.Flow",
+              "name": "Datos personales y token JWT",
+              "description": "",
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "protocol": "HTTP, JSON",
+              "isEncrypted": false,
+              "isPublicNetwork": true,
+              "hasOpenThreats": false,
+              "threats": [],
+              "isTrustBoundary": false
+            },
+            "id": "22957c32-4229-4d1e-8c47-c6e11e7b693f",
+            "labels": [
+              {
+                "position": {
+                  "distance": 0.5,
+                  "offset": 20
+                },
+                "attrs": {
+                  "label": {
+                    "text": "Datos personales y token JWT\n(HTTP, JSON)"
+                  }
+                }
+              }
+            ],
+            "source": {
+              "cell": "066d41ce-3d9c-473e-840e-4f75aa260cc8"
+            },
+            "target": {
+              "cell": "f13f2a4a-4040-4f85-a7ca-d4f471f8a7f4"
+            },
+            "vertices": [
+              {
+                "x": 650,
+                "y": 290
+              },
+              {
+                "x": 245,
+                "y": 290
+              }
+            ]
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "strokeWidth": 1,
+                "targetMarker": {
+                  "name": "block"
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 14,
+            "connector": "normal",
+            "data": {
+              "type": "tm.Flow",
+              "name": "Gestión de usuarios y reseñas",
+              "description": "",
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "protocol": "HTTP, JSON",
+              "isEncrypted": false,
+              "isPublicNetwork": true,
+              "hasOpenThreats": false,
+              "threats": [],
+              "isTrustBoundary": false
+            },
+            "id": "d2a75b9c-2e7c-4a11-af30-46dbf4f9b9fa",
+            "labels": [
+              {
+                "position": {
+                  "distance": 0.5,
+                  "offset": -20
+                },
+                "attrs": {
+                  "label": {
+                    "text": "Gestión de usuarios y reseñas\n(HTTP, JSON)"
+                  }
+                }
+              }
+            ],
+            "source": {
+              "cell": "96c6f3de-309d-4d02-91b8-9f1c79941405"
+            },
+            "target": {
+              "cell": "066d41ce-3d9c-473e-840e-4f75aa260cc8"
+            },
+            "vertices": [
+              {
+                "x": 245,
+                "y": 410
+              },
+              {
+                "x": 645,
+                "y": 410
+              }
+            ]
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "strokeWidth": 1,
+                "targetMarker": {
+                  "name": "block"
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 15,
+            "connector": "normal",
+            "data": {
+              "type": "tm.Flow",
+              "name": "Pedidos B2B",
+              "description": "",
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "protocol": "HTTP, XML o JSON",
+              "isEncrypted": false,
+              "isPublicNetwork": true,
+              "hasOpenThreats": false,
+              "threats": [],
+              "isTrustBoundary": false
+            },
+            "id": "69990e31-0897-420d-ad54-272049080022",
+            "labels": [
+              {
+                "position": {
+                  "distance": 0.5,
+                  "offset": -20
+                },
+                "attrs": {
+                  "label": {
+                    "text": "Pedidos B2B\n(HTTP, XML o JSON)"
+                  }
+                }
+              }
+            ],
+            "source": {
+              "cell": "42733acb-264f-4f2e-aea7-cf3792e5f0d5"
+            },
+            "target": {
+              "cell": "066d41ce-3d9c-473e-840e-4f75aa260cc8"
+            },
+            "vertices": [
+              {
+                "x": 245,
+                "y": 560
+              },
+              {
+                "x": 655,
+                "y": 560
+              }
+            ]
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "strokeWidth": 1,
+                "targetMarker": {
+                  "name": "block"
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 16,
+            "connector": "normal",
+            "data": {
+              "type": "tm.Flow",
+              "name": "Lectura de /metrics",
+              "description": "",
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "protocol": "HTTP, texto",
+              "isEncrypted": false,
+              "isPublicNetwork": true,
+              "hasOpenThreats": false,
+              "threats": [],
+              "isTrustBoundary": false
+            },
+            "id": "6530290d-9392-4aa7-b104-59c1fa8744ba",
+            "labels": [
+              {
+                "position": {
+                  "distance": 0.5,
+                  "offset": -20
+                },
+                "attrs": {
+                  "label": {
+                    "text": "Lectura de /metrics\n(HTTP, texto)"
+                  }
+                }
+              }
+            ],
+            "source": {
+              "cell": "a3e70631-3c7e-49dc-8936-04b27b2d9425"
+            },
+            "target": {
+              "cell": "066d41ce-3d9c-473e-840e-4f75aa260cc8"
+            },
+            "vertices": [
+              {
+                "x": 245,
+                "y": 710
+              },
+              {
+                "x": 694,
+                "y": 710
+              }
+            ]
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "strokeWidth": 1,
+                "targetMarker": {
+                  "name": "block"
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 17,
+            "connector": "normal",
+            "data": {
+              "type": "tm.Flow",
+              "name": "Preguntas del chatbot",
+              "description": "",
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "protocol": "HTTP, JSON",
+              "isEncrypted": false,
+              "isPublicNetwork": true,
+              "hasOpenThreats": false,
+              "threats": [],
+              "isTrustBoundary": false
+            },
+            "id": "9eb7148d-3c9b-40ca-b08c-aeb8ab6236b0",
+            "labels": [
+              {
+                "position": {
+                  "distance": 0.5,
+                  "offset": -20
+                },
+                "attrs": {
+                  "label": {
+                    "text": "Preguntas del chatbot\n(HTTP, JSON)"
+                  }
+                }
+              }
+            ],
+            "source": {
+              "cell": "066d41ce-3d9c-473e-840e-4f75aa260cc8"
+            },
+            "target": {
+              "cell": "f2887af3-e350-4948-9ed8-669a73cdd5ce"
+            },
+            "vertices": [
+              {
+                "x": 880,
+                "y": 210
+              },
+              {
+                "x": 1290,
+                "y": 210
+              }
+            ]
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "strokeWidth": 1,
+                "targetMarker": {
+                  "name": "block"
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 18,
+            "connector": "normal",
+            "data": {
+              "type": "tm.Flow",
+              "name": "Aviso de retos resueltos",
+              "description": "",
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "protocol": "HTTP o HTTPS, JSON",
+              "isEncrypted": true,
+              "isPublicNetwork": true,
+              "hasOpenThreats": false,
+              "threats": [],
+              "isTrustBoundary": false
+            },
+            "id": "b6054a05-62f4-41bf-a503-d188e4f017f4",
+            "labels": [
+              {
+                "position": {
+                  "distance": 0.5,
+                  "offset": -20
+                },
+                "attrs": {
+                  "label": {
+                    "text": "Aviso de retos resueltos\n(HTTP o HTTPS, JSON)"
+                  }
+                }
+              }
+            ],
+            "source": {
+              "cell": "066d41ce-3d9c-473e-840e-4f75aa260cc8"
+            },
+            "target": {
+              "cell": "b163541a-ebff-447b-8fda-9333623c1f39"
+            },
+            "vertices": [
+              {
+                "x": 895,
+                "y": 400
+              },
+              {
+                "x": 1290,
+                "y": 400
+              }
+            ]
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "strokeWidth": 1,
+                "targetMarker": {
+                  "name": "block"
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 19,
+            "connector": "normal",
+            "data": {
+              "type": "tm.Flow",
+              "name": "Descarga de imagen por URL",
+              "description": "",
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "protocol": "HTTP o HTTPS",
+              "isEncrypted": true,
+              "isPublicNetwork": true,
+              "hasOpenThreats": false,
+              "threats": [],
+              "isTrustBoundary": false
+            },
+            "id": "6d1de79c-508c-49cc-b3a2-4bc39ba7280a",
+            "labels": [
+              {
+                "position": {
+                  "distance": 0.5,
+                  "offset": -20
+                },
+                "attrs": {
+                  "label": {
+                    "text": "Descarga de imagen por URL\n(HTTP o HTTPS)"
+                  }
+                }
+              }
+            ],
+            "source": {
+              "cell": "066d41ce-3d9c-473e-840e-4f75aa260cc8"
+            },
+            "target": {
+              "cell": "7e4a2210-9f1b-4106-8b46-60bb8c1ab168"
+            },
+            "vertices": [
+              {
+                "x": 880,
+                "y": 590
+              },
+              {
+                "x": 1290,
+                "y": 590
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": 1,
+        "title": "Nivel 1 - Componentes",
+        "diagramType": "STRIDE",
+        "placeholder": "Componentes de Juice Shop, almacenes de datos, servicios externos y límites de confianza.",
+        "thumbnail": "./public/content/images/thumbnail.stride.jpg",
+        "version": "2.6.2",
+        "cells": [
+          {
+            "position": {
+              "x": 10,
+              "y": 10
+            },
+            "size": {
+              "width": 600,
+              "height": 880
+            },
+            "attrs": {
+              "label": {
+                "text": "Internet y operación"
+              },
+              "body": {
+                "stroke": "#cc0000",
+                "strokeWidth": 3,
+                "strokeDasharray": "10 5"
+              }
+            },
+            "visible": true,
+            "shape": "trust-boundary-box",
+            "zIndex": -50,
+            "id": "33401543-3684-4b39-a841-56d4e7beb72d",
+            "data": {
+              "type": "tm.BoundaryBox",
+              "name": "Internet y operación",
+              "description": "",
+              "isTrustBoundary": true,
+              "hasOpenThreats": false
+            }
+          },
+          {
+            "position": {
+              "x": 640,
+              "y": 10
+            },
+            "size": {
+              "width": 600,
+              "height": 880
+            },
+            "attrs": {
+              "label": {
+                "text": "Contenedor Docker (aplicación)"
+              },
+              "body": {
+                "stroke": "#cc0000",
+                "strokeWidth": 3,
+                "strokeDasharray": "10 5"
+              }
+            },
+            "visible": true,
+            "shape": "trust-boundary-box",
+            "zIndex": -50,
+            "id": "f2bad68c-9d2d-47aa-b995-0db8ca5ab66f",
+            "data": {
+              "type": "tm.BoundaryBox",
+              "name": "Contenedor Docker (aplicación)",
+              "description": "",
+              "isTrustBoundary": true,
+              "hasOpenThreats": false
+            }
+          },
+          {
+            "position": {
+              "x": 1420,
+              "y": 10
+            },
+            "size": {
+              "width": 300,
+              "height": 880
+            },
+            "attrs": {
+              "label": {
+                "text": "Datos y servicios externos"
+              },
+              "body": {
+                "stroke": "#cc0000",
+                "strokeWidth": 3,
+                "strokeDasharray": "10 5"
+              }
+            },
+            "visible": true,
+            "shape": "trust-boundary-box",
+            "zIndex": -50,
+            "id": "34fe086d-3b25-409e-bd55-aef77783c70a",
+            "data": {
+              "type": "tm.BoundaryBox",
+              "name": "Datos y servicios externos",
+              "description": "",
+              "isTrustBoundary": true,
+              "hasOpenThreats": false
+            }
+          },
+          {
+            "position": {
+              "x": 30,
+              "y": 170
+            },
+            "size": {
+              "width": 150,
+              "height": 60
+            },
+            "attrs": {
+              "text": {
+                "text": "Cliente registrado"
+              },
+              "body": {
+                "stroke": "#333333",
+                "strokeWidth": 1,
+                "strokeDasharray": null
+              }
+            },
+            "visible": true,
+            "shape": "actor",
+            "zIndex": 2,
+            "id": "5cb9203a-880f-455d-aa83-ac0a93acb0d2",
+            "data": {
+              "name": "Cliente registrado",
+              "description": "",
+              "type": "tm.Actor",
+              "isTrustBoundary": false,
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "threats": [],
+              "hasOpenThreats": false,
+              "providesAuthentication": false
+            }
+          },
+          {
+            "position": {
+              "x": 30,
+              "y": 290
+            },
+            "size": {
+              "width": 150,
+              "height": 60
+            },
+            "attrs": {
+              "text": {
+                "text": "Administrador"
+              },
+              "body": {
+                "stroke": "#333333",
+                "strokeWidth": 1,
+                "strokeDasharray": null
+              }
+            },
+            "visible": true,
+            "shape": "actor",
+            "zIndex": 3,
+            "id": "9a4b505b-e5b5-4676-b2c7-e9f85a06c929",
+            "data": {
+              "name": "Administrador",
+              "description": "",
+              "type": "tm.Actor",
+              "isTrustBoundary": false,
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "threats": [],
+              "hasOpenThreats": false,
+              "providesAuthentication": false
+            }
+          },
+          {
+            "position": {
+              "x": 30,
+              "y": 410
+            },
+            "size": {
+              "width": 150,
+              "height": 60
+            },
+            "attrs": {
+              "text": {
+                "text": "Cliente B2B"
+              },
+              "body": {
+                "stroke": "#333333",
+                "strokeWidth": 1,
+                "strokeDasharray": null
+              }
+            },
+            "visible": true,
+            "shape": "actor",
+            "zIndex": 4,
+            "id": "3c048e8e-4ea5-42f6-96fc-8f59f417740e",
+            "data": {
+              "name": "Cliente B2B",
+              "description": "",
+              "type": "tm.Actor",
+              "isTrustBoundary": false,
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "threats": [],
+              "hasOpenThreats": false,
+              "providesAuthentication": false
+            }
+          },
+          {
+            "position": {
+              "x": 30,
+              "y": 530
+            },
+            "size": {
+              "width": 150,
+              "height": 60
+            },
+            "attrs": {
+              "text": {
+                "text": "Prometheus"
+              },
+              "body": {
+                "stroke": "#333333",
+                "strokeWidth": 1,
+                "strokeDasharray": null
+              }
+            },
+            "visible": true,
+            "shape": "actor",
+            "zIndex": 5,
+            "id": "2d9d64fb-a680-42d6-9cfe-1136ec2bb80b",
+            "data": {
+              "name": "Prometheus",
+              "description": "",
+              "type": "tm.Actor",
+              "isTrustBoundary": false,
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "threats": [],
+              "hasOpenThreats": false,
+              "providesAuthentication": false
+            }
+          },
+          {
+            "position": {
+              "x": 30,
+              "y": 740
+            },
+            "size": {
+              "width": 150,
+              "height": 60
+            },
+            "attrs": {
+              "text": {
+                "text": "Visitante anónimo"
+              },
+              "body": {
+                "stroke": "#333333",
+                "strokeWidth": 1,
+                "strokeDasharray": null
+              }
+            },
+            "visible": true,
+            "shape": "actor",
+            "zIndex": 6,
+            "id": "d941bf7a-c907-4047-bf8a-ff46ac4313a2",
+            "data": {
+              "name": "Visitante anónimo",
+              "description": "",
+              "type": "tm.Actor",
+              "isTrustBoundary": false,
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "threats": [],
+              "hasOpenThreats": false,
+              "providesAuthentication": false
+            }
+          },
+          {
+            "position": {
+              "x": 670,
+              "y": 680
+            },
+            "size": {
+              "width": 190,
+              "height": 190
+            },
+            "attrs": {
+              "text": {
+                "text": "Servidor de contenido"
+              },
+              "body": {
+                "stroke": "#333333",
+                "strokeWidth": 1,
+                "strokeDasharray": null
+              }
+            },
+            "visible": true,
+            "shape": "process",
+            "zIndex": 7,
+            "id": "b49b146d-9f65-46f0-8695-44f9449e91fe",
+            "data": {
+              "name": "Servidor de contenido",
+              "description": "Express sirve la SPA Angular y expone los directorios /ftp y /support/logs.",
+              "type": "tm.Process",
+              "isTrustBoundary": false,
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "threats": [
+                {
+                  "id": "7aa55bbf-e23d-485c-8500-93b408699d49",
+                  "title": "Information disclosure: El directorio /ftp se puede listar y descargar sin autenticación",
+                  "status": "Open",
+                  "severity": "High",
+                  "type": "Information disclosure",
+                  "description": "El directorio /ftp se puede listar y descargar sin autenticación. Contiene un respaldo de dependencias, un archivo .kdbx y otros documentos internos.",
+                  "mitigation": "Quitar el listado de directorios y sacar de la imagen los archivos que no deben ser públicos.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 8,
+                  "score": ""
+                },
+                {
+                  "id": "ef6eee7e-719f-432f-b9e5-34a2a3e26bef",
+                  "title": "Information disclosure: El directorio /support/logs se lista sin autenticación y entrega los logs de acceso con IP",
+                  "status": "Open",
+                  "severity": "High",
+                  "type": "Information disclosure",
+                  "description": "El directorio /support/logs se lista sin autenticación y entrega los logs de acceso con IP y rutas consultadas, que sirven para preparar otros ataques.",
+                  "mitigation": "Quitar la ruta pública o protegerla con autenticación y rol de administrador.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 9,
+                  "score": ""
+                }
+              ],
+              "hasOpenThreats": true
+            }
+          },
+          {
+            "position": {
+              "x": 1030,
+              "y": 330
+            },
+            "size": {
+              "width": 200,
+              "height": 200
+            },
+            "attrs": {
+              "text": {
+                "text": "API REST"
+              },
+              "body": {
+                "stroke": "#333333",
+                "strokeWidth": 1,
+                "strokeDasharray": null
+              }
+            },
+            "visible": true,
+            "shape": "process",
+            "zIndex": 8,
+            "id": "f6ae225c-46c4-4816-8cf1-4e74e7988355",
+            "data": {
+              "name": "API REST",
+              "description": "Express con rutas /rest, /api y /b2b, autenticación JWT, subida de archivos y módulo de chatbot.",
+              "type": "tm.Process",
+              "isTrustBoundary": false,
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "threats": [
+                {
+                  "id": "733d1ab7-e8ec-4483-8888-d6fc0ef1ae11",
+                  "title": "Spoofing: La llave privada RSA que firma los JWT está escrita en lib/insecurity",
+                  "status": "Open",
+                  "severity": "High",
+                  "type": "Spoofing",
+                  "description": "La llave privada RSA que firma los JWT está escrita en lib/insecurity.ts. Cualquiera que lea el repositorio puede firmar un token con el rol admin y la API lo acepta.",
+                  "mitigation": "Sacar la llave del código, cargarla desde un secreto del entorno y rotarla.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 2,
+                  "score": ""
+                },
+                {
+                  "id": "874e652a-6c7e-4f7f-93cd-d28ee4871677",
+                  "title": "Tampering: La ruta PUT /api/Products/:id no tiene el control isAuthorized, que está comentado en serv",
+                  "status": "Open",
+                  "severity": "High",
+                  "type": "Tampering",
+                  "description": "La ruta PUT /api/Products/:id no tiene el control isAuthorized, que está comentado en server.ts. Cualquier usuario puede cambiar el precio o la descripción de un producto.",
+                  "mitigation": "Activar la autenticación en la ruta y restringirla al rol administrador.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 3,
+                  "score": ""
+                },
+                {
+                  "id": "82c71910-7586-47cd-9010-2faeec6f0131",
+                  "title": "Tampering: La búsqueda de productos concatena el criterio en la consulta SQL",
+                  "status": "Open",
+                  "severity": "High",
+                  "type": "Tampering",
+                  "description": "La búsqueda de productos concatena el criterio en la consulta SQL. Con un UNION el atacante lee otras tablas, como los usuarios, o altera datos.",
+                  "mitigation": "Parametrizar la consulta de búsqueda y validar el largo y los caracteres del criterio.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 4,
+                  "score": ""
+                },
+                {
+                  "id": "1c2ba385-73e2-486a-ae8f-d00232041a23",
+                  "title": "Tampering: La descripción de un producto se muestra con innerHTML en el frontend",
+                  "status": "Open",
+                  "severity": "Medium",
+                  "type": "Tampering",
+                  "description": "La descripción de un producto se muestra con innerHTML en el frontend. Si el atacante la cambia con la ruta de T03, el script se ejecuta en el navegador de quien abra el producto.",
+                  "mitigation": "Sanitizar la descripción al guardarla y mostrarla como texto, sin innerHTML.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 5,
+                  "score": ""
+                },
+                {
+                  "id": "b9c09fbf-abdd-4bd6-b2bc-66affcc94d63",
+                  "title": "Repudiation: Al crear una reseña el servidor toma el autor del cuerpo de la petición y no del JWT",
+                  "status": "Open",
+                  "severity": "High",
+                  "type": "Repudiation",
+                  "description": "Al crear una reseña el servidor toma el autor del cuerpo de la petición y no del JWT. Un usuario publica a nombre de otro y la víctima no puede probar que no fue ella.",
+                  "mitigation": "Tomar el autor del token verificado en el servidor e ignorar el campo del cliente.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 6,
+                  "score": ""
+                },
+                {
+                  "id": "8d8cb408-34bf-4013-8990-60ce3bbab3f9",
+                  "title": "Information disclosure: El analizador de XML de la subida de archivos tiene habilitadas las entidades externas",
+                  "status": "Open",
+                  "severity": "High",
+                  "type": "Information disclosure",
+                  "description": "El analizador de XML de la subida de archivos tiene habilitadas las entidades externas. Un XML con una entidad file:///etc/passwd devuelve el contenido del archivo del servidor.",
+                  "mitigation": "Desactivar la resolución de entidades externas y de DTD en el analizador.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 12,
+                  "score": ""
+                },
+                {
+                  "id": "5f4370dc-5987-4a5c-bef1-e6b081e19c79",
+                  "title": "Denial of service: La subida de archivos acepta XML y YAML que se procesan en el mismo hilo de Node",
+                  "status": "Open",
+                  "severity": "Medium",
+                  "type": "Denial of service",
+                  "description": "La subida de archivos acepta XML y YAML que se procesan en el mismo hilo de Node. Un XML con entidades anidadas o un YAML con alias recursivos consume CPU y deja la aplicación sin responder.",
+                  "mitigation": "Desactivar entidades en el XML, limitar el tamaño y la profundidad y mantener el tiempo máximo de proceso.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 14,
+                  "score": ""
+                },
+                {
+                  "id": "aa4bcd25-9d84-4d75-9e1c-ef050258ce25",
+                  "title": "Elevation of privilege: El modelo de usuario acepta admin como valor del campo role al registrarse",
+                  "status": "Open",
+                  "severity": "High",
+                  "type": "Elevation of privilege",
+                  "description": "El modelo de usuario acepta admin como valor del campo role al registrarse. Un visitante envía role admin en POST /api/Users y obtiene una cuenta de administrador.",
+                  "mitigation": "Ignorar el campo role del cliente y asignar customer en el servidor.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 15,
+                  "score": ""
+                },
+                {
+                  "id": "52207cd1-b6ef-41fd-956b-f667243c69ce",
+                  "title": "Tampering: Al descomprimir un zip la ruta se valida con includes en vez de comparar el directorio bas",
+                  "status": "Open",
+                  "severity": "High",
+                  "type": "Tampering",
+                  "description": "Al descomprimir un zip la ruta se valida con includes en vez de comparar el directorio base. Un archivo con ../ en el nombre sobrescribe archivos fuera de uploads, como ftp/legal.md.",
+                  "mitigation": "Resolver la ruta final y comprobar que empieza por el directorio de destino antes de escribir.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 18,
+                  "score": ""
+                },
+                {
+                  "id": "aaf77061-7081-469f-aef6-1831ee85ffd8",
+                  "title": "Elevation of privilege: El package",
+                  "status": "Open",
+                  "severity": "High",
+                  "type": "Elevation of privilege",
+                  "description": "El package.json fija versiones muy antiguas como jsonwebtoken 0.4.0, express-jwt 0.1.3 y sanitize-html 1.4.2. Tienen vulnerabilidades públicas que se pueden explotar contra la API.",
+                  "mitigation": "Actualizar las dependencias a versiones sin vulnerabilidades críticas y vigilarlas con Dependabot.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 20,
+                  "score": ""
+                }
+              ],
+              "hasOpenThreats": true
+            }
+          },
+          {
+            "position": {
+              "x": 1465,
+              "y": 160
+            },
+            "size": {
+              "width": 170,
+              "height": 80
+            },
+            "attrs": {
+              "text": {
+                "text": "Base SQLite"
+              },
+              "topLine": {
+                "stroke": "#333333",
+                "strokeWidth": 1,
+                "strokeDasharray": null
+              },
+              "bottomLine": {
+                "stroke": "#333333",
+                "strokeWidth": 1,
+                "strokeDasharray": null
+              }
+            },
+            "visible": true,
+            "shape": "store",
+            "zIndex": 9,
+            "id": "0c31b267-2edb-4662-a01c-2616624c392f",
+            "data": {
+              "name": "Base SQLite",
+              "description": "Usuarios, cestas, tarjetas, direcciones y quejas en data/juiceshop.sqlite.",
+              "type": "tm.Store",
+              "isTrustBoundary": false,
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "threats": [
+                {
+                  "id": "e6cad3de-8049-451e-90c0-2e6f74e73c39",
+                  "title": "Information disclosure: Las contraseñas se guardan con MD5 sin sal y el número de tarjeta se guarda completo",
+                  "status": "Open",
+                  "severity": "High",
+                  "type": "Information disclosure",
+                  "description": "Las contraseñas se guardan con MD5 sin sal y el número de tarjeta se guarda completo. Si el archivo juiceshop.sqlite se filtra, las contraseñas se descifran con tablas y las tarjetas quedan expuestas.",
+                  "mitigation": "Usar un hash adaptativo con sal como bcrypt o argon2 y no guardar el número completo de la tarjeta.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 10,
+                  "score": ""
+                }
+              ],
+              "hasOpenThreats": true,
+              "isALog": false,
+              "storesCredentials": true,
+              "isEncrypted": false,
+              "isSigned": false
+            }
+          },
+          {
+            "position": {
+              "x": 1465,
+              "y": 270
+            },
+            "size": {
+              "width": 170,
+              "height": 80
+            },
+            "attrs": {
+              "text": {
+                "text": "MarsDB"
+              },
+              "topLine": {
+                "stroke": "#333333",
+                "strokeWidth": 1,
+                "strokeDasharray": null
+              },
+              "bottomLine": {
+                "stroke": "#333333",
+                "strokeWidth": 1,
+                "strokeDasharray": null
+              }
+            },
+            "visible": true,
+            "shape": "store",
+            "zIndex": 10,
+            "id": "6f1bb282-c77f-46da-8266-8ed8372a3038",
+            "data": {
+              "name": "MarsDB",
+              "description": "Reseñas de productos y pedidos, en memoria.",
+              "type": "tm.Store",
+              "isTrustBoundary": false,
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "threats": [],
+              "hasOpenThreats": false,
+              "isALog": false,
+              "storesCredentials": false,
+              "isEncrypted": false,
+              "isSigned": false
+            }
+          },
+          {
+            "position": {
+              "x": 1465,
+              "y": 385
+            },
+            "size": {
+              "width": 170,
+              "height": 70
+            },
+            "attrs": {
+              "text": {
+                "text": "Servicio LLM"
+              },
+              "body": {
+                "stroke": "#333333",
+                "strokeWidth": 1,
+                "strokeDasharray": null
+              }
+            },
+            "visible": true,
+            "shape": "actor",
+            "zIndex": 11,
+            "id": "8bdf3190-1447-4b10-ac54-03723f274f45",
+            "data": {
+              "name": "Servicio LLM",
+              "description": "Modelo de lenguaje al que el chatbot envía las preguntas.",
+              "type": "tm.Actor",
+              "isTrustBoundary": false,
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "threats": [],
+              "hasOpenThreats": false,
+              "providesAuthentication": false
+            }
+          },
+          {
+            "position": {
+              "x": 1465,
+              "y": 495
+            },
+            "size": {
+              "width": 170,
+              "height": 70
+            },
+            "attrs": {
+              "text": {
+                "text": "Webhook de soluciones"
+              },
+              "body": {
+                "stroke": "#333333",
+                "strokeWidth": 1,
+                "strokeDasharray": null
+              }
+            },
+            "visible": true,
+            "shape": "actor",
+            "zIndex": 12,
+            "id": "136ace5b-14eb-4138-a507-fdb5109c7c83",
+            "data": {
+              "name": "Webhook de soluciones",
+              "description": "URL opcional configurada con SOLUTIONS_WEBHOOK.",
+              "type": "tm.Actor",
+              "isTrustBoundary": false,
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "threats": [],
+              "hasOpenThreats": false,
+              "providesAuthentication": false
+            }
+          },
+          {
+            "position": {
+              "x": 1465,
+              "y": 605
+            },
+            "size": {
+              "width": 170,
+              "height": 70
+            },
+            "attrs": {
+              "text": {
+                "text": "Sitios externos"
+              },
+              "body": {
+                "stroke": "#333333",
+                "strokeWidth": 1,
+                "strokeDasharray": null
+              }
+            },
+            "visible": true,
+            "shape": "actor",
+            "zIndex": 13,
+            "id": "f7de48f0-2581-4942-b3f0-725665a37526",
+            "data": {
+              "name": "Sitios externos",
+              "description": "Cualquier URL indicada por el usuario para su imagen de perfil.",
+              "type": "tm.Actor",
+              "isTrustBoundary": false,
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "threats": [],
+              "hasOpenThreats": false,
+              "providesAuthentication": false
+            }
+          },
+          {
+            "position": {
+              "x": 1465,
+              "y": 730
+            },
+            "size": {
+              "width": 170,
+              "height": 80
+            },
+            "attrs": {
+              "text": {
+                "text": "Sistema de archivos"
+              },
+              "topLine": {
+                "stroke": "#333333",
+                "strokeWidth": 1,
+                "strokeDasharray": null
+              },
+              "bottomLine": {
+                "stroke": "#333333",
+                "strokeWidth": 1,
+                "strokeDasharray": null
+              }
+            },
+            "visible": true,
+            "shape": "store",
+            "zIndex": 14,
+            "id": "b18bf6cf-89a4-43ee-a7c6-f0959c1ddfcc",
+            "data": {
+              "name": "Sistema de archivos",
+              "description": "Directorios ftp, uploads, logs y llaves en encryptionkeys.",
+              "type": "tm.Store",
+              "isTrustBoundary": false,
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "threats": [
+                {
+                  "id": "55c2c07a-baab-43d9-9829-afa97bd0a938",
+                  "title": "Repudiation: El log de accesos de Morgan guarda IP y ruta, pero no el usuario del JWT ni el resultado d",
+                  "status": "Open",
+                  "severity": "Medium",
+                  "type": "Repudiation",
+                  "description": "El log de accesos de Morgan guarda IP y ruta, pero no el usuario del JWT ni el resultado del login. Tras un abuso no se puede demostrar quién hizo cada acción.",
+                  "mitigation": "Registrar el id del usuario, el resultado de cada autenticación y los cambios de administración.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 7,
+                  "score": ""
+                }
+              ],
+              "hasOpenThreats": true,
+              "isALog": false,
+              "storesCredentials": true,
+              "isEncrypted": false,
+              "isSigned": false
+            }
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "strokeWidth": 1,
+                "targetMarker": {
+                  "name": "block"
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 15,
+            "connector": "normal",
+            "data": {
+              "type": "tm.Flow",
+              "name": "Carga de la SPA, /ftp y logs",
+              "description": "",
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "protocol": "HTTP",
+              "isEncrypted": false,
+              "isPublicNetwork": true,
+              "hasOpenThreats": false,
+              "threats": [],
+              "isTrustBoundary": false
+            },
+            "id": "31f5d0eb-cb6f-4ba2-831f-c27c0ee72021",
+            "labels": [
+              {
+                "position": {
+                  "distance": 0.5,
+                  "offset": -20
+                },
+                "attrs": {
+                  "label": {
+                    "text": "Carga de la SPA, /ftp y logs\n(HTTP)"
+                  }
+                }
+              }
+            ],
+            "source": {
+              "cell": "d941bf7a-c907-4047-bf8a-ff46ac4313a2"
+            },
+            "target": {
+              "cell": "b49b146d-9f65-46f0-8695-44f9449e91fe"
+            },
+            "vertices": [
+              {
+                "x": 225,
+                "y": 775
+              },
+              {
+                "x": 655,
+                "y": 775
+              }
+            ]
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "strokeWidth": 1,
+                "targetMarker": {
+                  "name": "block"
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 16,
+            "connector": "normal",
+            "data": {
+              "type": "tm.Flow",
+              "name": "Catálogo, búsqueda, registro y login",
+              "description": "",
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "protocol": "HTTP, JSON",
+              "isEncrypted": false,
+              "isPublicNetwork": true,
+              "hasOpenThreats": true,
+              "threats": [
+                {
+                  "id": "a4fa2cfe-eae5-4b24-bde8-fdf7765490d7",
+                  "title": "Spoofing: El login arma la consulta SQL con el correo que escribe el usuario",
+                  "status": "Open",
+                  "severity": "High",
+                  "type": "Spoofing",
+                  "description": "El login arma la consulta SQL con el correo que escribe el usuario. Con un correo como admin@juice-sh.op'-- el atacante entra como administrador sin conocer la contraseña.",
+                  "mitigation": "Usar consultas parametrizadas con replacements de Sequelize y no concatenar datos del usuario.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 1,
+                  "score": ""
+                },
+                {
+                  "id": "a84a163e-45fb-4fca-981f-d892eba93a60",
+                  "title": "Denial of service: Solo el reinicio de contraseña y el segundo factor tienen límite de peticiones",
+                  "status": "Open",
+                  "severity": "High",
+                  "type": "Denial of service",
+                  "description": "Solo el reinicio de contraseña y el segundo factor tienen límite de peticiones. El login no lo tiene, por lo que un script prueba contraseñas sin freno y consume recursos del proceso.",
+                  "mitigation": "Aplicar express-rate-limit al login y a las rutas de registro.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 13,
+                  "score": ""
+                }
+              ],
+              "isTrustBoundary": false
+            },
+            "id": "5029c0c3-f3ab-411a-b60d-237b367d4791",
+            "labels": [
+              {
+                "position": {
+                  "distance": 0.5,
+                  "offset": -20
+                },
+                "attrs": {
+                  "label": {
+                    "text": "Catálogo, búsqueda, registro y login\n(HTTP, JSON)"
+                  }
+                }
+              }
+            ],
+            "source": {
+              "cell": "d941bf7a-c907-4047-bf8a-ff46ac4313a2"
+            },
+            "target": {
+              "cell": "f6ae225c-46c4-4816-8cf1-4e74e7988355"
+            },
+            "vertices": [
+              {
+                "x": 225,
+                "y": 750
+              },
+              {
+                "x": 300,
+                "y": 640
+              },
+              {
+                "x": 1105,
+                "y": 640
+              }
+            ]
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "strokeWidth": 1,
+                "targetMarker": {
+                  "name": "block"
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 17,
+            "connector": "normal",
+            "data": {
+              "type": "tm.Flow",
+              "name": "Cesta, pedidos, pagos y perfil",
+              "description": "",
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "protocol": "HTTP, JSON, JWT",
+              "isEncrypted": false,
+              "isPublicNetwork": true,
+              "hasOpenThreats": true,
+              "threats": [
+                {
+                  "id": "2ce58fed-400c-454c-a867-abb4d95954e8",
+                  "title": "Elevation of privilege: La ruta /rest/basket/:id solo exige estar autenticado y no comprueba que la cesta sea del ",
+                  "status": "Open",
+                  "severity": "High",
+                  "type": "Elevation of privilege",
+                  "description": "La ruta /rest/basket/:id solo exige estar autenticado y no comprueba que la cesta sea del usuario. Cambiando el id se ven y modifican cestas ajenas.",
+                  "mitigation": "Comparar el id de la cesta con el usuario del JWT antes de responder.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 16,
+                  "score": ""
+                }
+              ],
+              "isTrustBoundary": false
+            },
+            "id": "5059e494-c1dc-406f-adca-bd3997603b53",
+            "labels": [
+              {
+                "position": {
+                  "distance": 0.5,
+                  "offset": -20
+                },
+                "attrs": {
+                  "label": {
+                    "text": "Cesta, pedidos, pagos y perfil\n(HTTP, JSON, JWT)"
+                  }
+                }
+              }
+            ],
+            "source": {
+              "cell": "5cb9203a-880f-455d-aa83-ac0a93acb0d2"
+            },
+            "target": {
+              "cell": "f6ae225c-46c4-4816-8cf1-4e74e7988355"
+            },
+            "vertices": [
+              {
+                "x": 225,
+                "y": 200
+              },
+              {
+                "x": 1105,
+                "y": 200
+              }
+            ]
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "strokeWidth": 1,
+                "targetMarker": {
+                  "name": "block"
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 18,
+            "connector": "normal",
+            "data": {
+              "type": "tm.Flow",
+              "name": "Datos personales y token JWT",
+              "description": "",
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "protocol": "HTTP, JSON",
+              "isEncrypted": false,
+              "isPublicNetwork": true,
+              "hasOpenThreats": true,
+              "threats": [
+                {
+                  "id": "06c6924a-6e5e-4344-babc-1be3e87d61c6",
+                  "title": "Information disclosure: Toda la comunicación viaja por HTTP sin TLS",
+                  "status": "Open",
+                  "severity": "High",
+                  "type": "Information disclosure",
+                  "description": "Toda la comunicación viaja por HTTP sin TLS. Un atacante en la misma red lee el token JWT y los datos personales de las respuestas y reutiliza la sesión.",
+                  "mitigation": "Publicar la aplicación detrás de un proxy con TLS y activar la cabecera Strict-Transport-Security.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 19,
+                  "score": ""
+                }
+              ],
+              "isTrustBoundary": false
+            },
+            "id": "242c609a-2e00-4cb5-ac7d-e03c4c4b9aa6",
+            "labels": [
+              {
+                "position": {
+                  "distance": 0.5,
+                  "offset": 20
+                },
+                "attrs": {
+                  "label": {
+                    "text": "Datos personales y token JWT\n(HTTP, JSON)"
+                  }
+                }
+              }
+            ],
+            "source": {
+              "cell": "f6ae225c-46c4-4816-8cf1-4e74e7988355"
+            },
+            "target": {
+              "cell": "5cb9203a-880f-455d-aa83-ac0a93acb0d2"
+            },
+            "vertices": [
+              {
+                "x": 1105,
+                "y": 250
+              },
+              {
+                "x": 225,
+                "y": 250
+              }
+            ]
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "strokeWidth": 1,
+                "targetMarker": {
+                  "name": "block"
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 19,
+            "connector": "normal",
+            "data": {
+              "type": "tm.Flow",
+              "name": "Gestión de usuarios y reseñas",
+              "description": "",
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "protocol": "HTTP, JSON, JWT",
+              "isEncrypted": false,
+              "isPublicNetwork": true,
+              "hasOpenThreats": false,
+              "threats": [],
+              "isTrustBoundary": false
+            },
+            "id": "bd119790-3791-41c1-b742-b04fcb940550",
+            "labels": [
+              {
+                "position": {
+                  "distance": 0.5,
+                  "offset": -20
+                },
+                "attrs": {
+                  "label": {
+                    "text": "Gestión de usuarios y reseñas\n(HTTP, JSON, JWT)"
+                  }
+                }
+              }
+            ],
+            "source": {
+              "cell": "9a4b505b-e5b5-4676-b2c7-e9f85a06c929"
+            },
+            "target": {
+              "cell": "f6ae225c-46c4-4816-8cf1-4e74e7988355"
+            },
+            "vertices": [
+              {
+                "x": 225,
+                "y": 320
+              },
+              {
+                "x": 1105,
+                "y": 320
+              }
+            ]
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "strokeWidth": 1,
+                "targetMarker": {
+                  "name": "block"
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 20,
+            "connector": "normal",
+            "data": {
+              "type": "tm.Flow",
+              "name": "Pedidos B2B",
+              "description": "",
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "protocol": "HTTP, XML o JSON",
+              "isEncrypted": false,
+              "isPublicNetwork": true,
+              "hasOpenThreats": true,
+              "threats": [
+                {
+                  "id": "cc3c66ae-207f-45e4-b9f7-f48f39bb330d",
+                  "title": "Elevation of privilege: Los pedidos B2B evalúan el campo orderLinesData dentro de un vm con notevil",
+                  "status": "Open",
+                  "severity": "High",
+                  "type": "Elevation of privilege",
+                  "description": "Los pedidos B2B evalúan el campo orderLinesData dentro de un vm con notevil. Una evasión del sandbox ejecuta código en el contenedor.",
+                  "mitigation": "No evaluar datos del usuario como código y validar el pedido contra un esquema JSON.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 17,
+                  "score": ""
+                }
+              ],
+              "isTrustBoundary": false
+            },
+            "id": "ea0e8b0f-0a06-4d22-8e0e-9e7fda0ede90",
+            "labels": [
+              {
+                "position": {
+                  "distance": 0.5,
+                  "offset": -20
+                },
+                "attrs": {
+                  "label": {
+                    "text": "Pedidos B2B\n(HTTP, XML o JSON)"
+                  }
+                }
+              }
+            ],
+            "source": {
+              "cell": "3c048e8e-4ea5-42f6-96fc-8f59f417740e"
+            },
+            "target": {
+              "cell": "f6ae225c-46c4-4816-8cf1-4e74e7988355"
+            },
+            "vertices": [
+              {
+                "x": 225,
+                "y": 440
+              },
+              {
+                "x": 1006,
+                "y": 440
+              }
+            ]
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "strokeWidth": 1,
+                "targetMarker": {
+                  "name": "block"
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 21,
+            "connector": "normal",
+            "data": {
+              "type": "tm.Flow",
+              "name": "Lectura de /metrics",
+              "description": "",
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "protocol": "HTTP, texto",
+              "isEncrypted": false,
+              "isPublicNetwork": true,
+              "hasOpenThreats": false,
+              "threats": [],
+              "isTrustBoundary": false
+            },
+            "id": "49bf29b7-6438-4d97-a9f3-0bf0e38751b0",
+            "labels": [
+              {
+                "position": {
+                  "distance": 0.5,
+                  "offset": -20
+                },
+                "attrs": {
+                  "label": {
+                    "text": "Lectura de /metrics\n(HTTP, texto)"
+                  }
+                }
+              }
+            ],
+            "source": {
+              "cell": "2d9d64fb-a680-42d6-9cfe-1136ec2bb80b"
+            },
+            "target": {
+              "cell": "f6ae225c-46c4-4816-8cf1-4e74e7988355"
+            },
+            "vertices": [
+              {
+                "x": 225,
+                "y": 560
+              },
+              {
+                "x": 1105,
+                "y": 560
+              }
+            ]
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "strokeWidth": 1,
+                "targetMarker": {
+                  "name": "block"
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 22,
+            "connector": "normal",
+            "data": {
+              "type": "tm.Flow",
+              "name": "Consultas SQL",
+              "description": "",
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "protocol": "Archivo local, SQL",
+              "isEncrypted": false,
+              "isPublicNetwork": true,
+              "hasOpenThreats": false,
+              "threats": [],
+              "isTrustBoundary": false
+            },
+            "id": "54ccbfe9-12a8-45af-8e91-d51c2b9a95c5",
+            "labels": [
+              {
+                "position": {
+                  "distance": 0.5,
+                  "offset": -20
+                },
+                "attrs": {
+                  "label": {
+                    "text": "Consultas SQL\n(Archivo local, SQL)"
+                  }
+                }
+              }
+            ],
+            "source": {
+              "cell": "f6ae225c-46c4-4816-8cf1-4e74e7988355"
+            },
+            "target": {
+              "cell": "0c31b267-2edb-4662-a01c-2616624c392f"
+            },
+            "vertices": [
+              {
+                "x": 1155,
+                "y": 200
+              },
+              {
+                "x": 1440,
+                "y": 200
+              }
+            ]
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "strokeWidth": 1,
+                "targetMarker": {
+                  "name": "block"
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 23,
+            "connector": "normal",
+            "data": {
+              "type": "tm.Flow",
+              "name": "Reseñas y pedidos",
+              "description": "",
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "protocol": "En memoria",
+              "isEncrypted": false,
+              "isPublicNetwork": true,
+              "hasOpenThreats": false,
+              "threats": [],
+              "isTrustBoundary": false
+            },
+            "id": "8250112c-647c-4358-9394-0a65aad2b004",
+            "labels": [
+              {
+                "position": {
+                  "distance": 0.5,
+                  "offset": -20
+                },
+                "attrs": {
+                  "label": {
+                    "text": "Reseñas y pedidos\n(En memoria)"
+                  }
+                }
+              }
+            ],
+            "source": {
+              "cell": "f6ae225c-46c4-4816-8cf1-4e74e7988355"
+            },
+            "target": {
+              "cell": "6f1bb282-c77f-46da-8266-8ed8372a3038"
+            },
+            "vertices": [
+              {
+                "x": 1155,
+                "y": 310
+              },
+              {
+                "x": 1440,
+                "y": 310
+              }
+            ]
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "strokeWidth": 1,
+                "targetMarker": {
+                  "name": "block"
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 24,
+            "connector": "normal",
+            "data": {
+              "type": "tm.Flow",
+              "name": "Preguntas del chatbot",
+              "description": "",
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "protocol": "HTTP, JSON",
+              "isEncrypted": false,
+              "isPublicNetwork": true,
+              "hasOpenThreats": false,
+              "threats": [],
+              "isTrustBoundary": false
+            },
+            "id": "d150f066-e16e-4f93-a7f6-d40ae9b1d4a8",
+            "labels": [
+              {
+                "position": {
+                  "distance": 0.5,
+                  "offset": -20
+                },
+                "attrs": {
+                  "label": {
+                    "text": "Preguntas del chatbot\n(HTTP, JSON)"
+                  }
+                }
+              }
+            ],
+            "source": {
+              "cell": "f6ae225c-46c4-4816-8cf1-4e74e7988355"
+            },
+            "target": {
+              "cell": "8bdf3190-1447-4b10-ac54-03723f274f45"
+            },
+            "vertices": [
+              {
+                "x": 1254,
+                "y": 420
+              },
+              {
+                "x": 1440,
+                "y": 420
+              }
+            ]
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "strokeWidth": 1,
+                "targetMarker": {
+                  "name": "block"
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 25,
+            "connector": "normal",
+            "data": {
+              "type": "tm.Flow",
+              "name": "Aviso de retos resueltos",
+              "description": "",
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "protocol": "HTTP o HTTPS, JSON",
+              "isEncrypted": true,
+              "isPublicNetwork": true,
+              "hasOpenThreats": false,
+              "threats": [],
+              "isTrustBoundary": false
+            },
+            "id": "f0eb7a55-f628-4480-9871-839e7eb5d526",
+            "labels": [
+              {
+                "position": {
+                  "distance": 0.5,
+                  "offset": -20
+                },
+                "attrs": {
+                  "label": {
+                    "text": "Aviso de retos resueltos\n(HTTP o HTTPS, JSON)"
+                  }
+                }
+              }
+            ],
+            "source": {
+              "cell": "f6ae225c-46c4-4816-8cf1-4e74e7988355"
+            },
+            "target": {
+              "cell": "136ace5b-14eb-4138-a507-fdb5109c7c83"
+            },
+            "vertices": [
+              {
+                "x": 1155,
+                "y": 530
+              },
+              {
+                "x": 1440,
+                "y": 530
+              }
+            ]
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "strokeWidth": 1,
+                "targetMarker": {
+                  "name": "block"
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 26,
+            "connector": "normal",
+            "data": {
+              "type": "tm.Flow",
+              "name": "Descarga de imagen por URL",
+              "description": "",
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "protocol": "HTTP o HTTPS",
+              "isEncrypted": true,
+              "isPublicNetwork": true,
+              "hasOpenThreats": true,
+              "threats": [
+                {
+                  "id": "66548c7a-d9bd-4953-867d-e21630bcafd0",
+                  "title": "Information disclosure: La API descarga con fetch cualquier URL que el usuario indique como imagen de perfil",
+                  "status": "Open",
+                  "severity": "High",
+                  "type": "Information disclosure",
+                  "description": "La API descarga con fetch cualquier URL que el usuario indique como imagen de perfil. El atacante apunta a servicios internos o al localhost del contenedor y lee la respuesta.",
+                  "mitigation": "Validar el destino con una lista de hosts permitidos y bloquear IP privadas y de loopback.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 11,
+                  "score": ""
+                }
+              ],
+              "isTrustBoundary": false
+            },
+            "id": "c31b7d97-9db3-4d96-a876-e80927215720",
+            "labels": [
+              {
+                "position": {
+                  "distance": 0.5,
+                  "offset": -20
+                },
+                "attrs": {
+                  "label": {
+                    "text": "Descarga de imagen por URL\n(HTTP o HTTPS)"
+                  }
+                }
+              }
+            ],
+            "source": {
+              "cell": "f6ae225c-46c4-4816-8cf1-4e74e7988355"
+            },
+            "target": {
+              "cell": "f7de48f0-2581-4942-b3f0-725665a37526"
+            },
+            "vertices": [
+              {
+                "x": 1155,
+                "y": 640
+              },
+              {
+                "x": 1440,
+                "y": 640
+              }
+            ]
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "strokeWidth": 1,
+                "targetMarker": {
+                  "name": "block"
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 27,
+            "connector": "normal",
+            "data": {
+              "type": "tm.Flow",
+              "name": "Subidas, logs y llaves",
+              "description": "",
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "protocol": "Archivo local",
+              "isEncrypted": false,
+              "isPublicNetwork": true,
+              "hasOpenThreats": false,
+              "threats": [],
+              "isTrustBoundary": false
+            },
+            "id": "03697424-93f4-421d-8576-e68d5ad08cef",
+            "labels": [
+              {
+                "position": {
+                  "distance": 0.5,
+                  "offset": 20
+                },
+                "attrs": {
+                  "label": {
+                    "text": "Subidas, logs y llaves\n(Archivo local)"
+                  }
+                }
+              }
+            ],
+            "source": {
+              "cell": "f6ae225c-46c4-4816-8cf1-4e74e7988355"
+            },
+            "target": {
+              "cell": "b18bf6cf-89a4-43ee-a7c6-f0959c1ddfcc"
+            },
+            "vertices": [
+              {
+                "x": 1155,
+                "y": 690
+              },
+              {
+                "x": 1440,
+                "y": 745
+              }
+            ]
+          },
+          {
+            "shape": "flow",
+            "attrs": {
+              "line": {
+                "stroke": "#333333",
+                "strokeWidth": 1,
+                "targetMarker": {
+                  "name": "block"
+                },
+                "strokeDasharray": null
+              }
+            },
+            "width": 200,
+            "height": 100,
+            "zIndex": 28,
+            "connector": "normal",
+            "data": {
+              "type": "tm.Flow",
+              "name": "Lectura de /ftp y logs",
+              "description": "",
+              "outOfScope": false,
+              "reasonOutOfScope": "",
+              "protocol": "Archivo local",
+              "isEncrypted": false,
+              "isPublicNetwork": true,
+              "hasOpenThreats": false,
+              "threats": [],
+              "isTrustBoundary": false
+            },
+            "id": "1ac4e610-a59d-4fcf-bd73-df9ebd25318d",
+            "labels": [
+              {
+                "position": {
+                  "distance": 0.5,
+                  "offset": -20
+                },
+                "attrs": {
+                  "label": {
+                    "text": "Lectura de /ftp y logs\n(Archivo local)"
+                  }
+                }
+              }
+            ],
+            "source": {
+              "cell": "b49b146d-9f65-46f0-8695-44f9449e91fe"
+            },
+            "target": {
+              "cell": "b18bf6cf-89a4-43ee-a7c6-f0959c1ddfcc"
+            },
+            "vertices": [
+              {
+                "x": 865,
+                "y": 800
+              },
+              {
+                "x": 1440,
+                "y": 800
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "diagramTop": 2,
+    "reviewer": "",
+    "threatTop": 20
+  }
+}
