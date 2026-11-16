@@ -1,0 +1,31 @@
+# Respeta lo que ya ignora git
+:include .gitignore
+
+# Dependencias y salidas generadas
+node_modules/
+frontend/dist/
+build/
+reportes/
+
+# Librerías de terceros minificadas
+*.min.js
+
+# Pruebas, traducciones y fragmentos didácticos de Juice Shop
+test/
+cypress/
+*.spec.ts
+*.spec.js
+i18n/
+frontend/src/assets/i18n/
+data/static/codefixes/
+data/static/web3-snippets/
+data/static/users.yml
+
+# Material propio del curso que no es código de la aplicación
+security/
+infra/
+
+# Infraestructura como código, se analiza en la fase 5
+terraform/
+infrastructure/
+vagrant/

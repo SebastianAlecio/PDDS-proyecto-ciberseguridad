@@ -1,0 +1,19 @@
+{
+  "@context": "https://openvex.dev/ns/v0.2.0",
+  "@id": "https://github.com/SebastianAlecio/PDDS-proyecto-ciberseguridad/security/vex/2026-001",
+  "author": "Equipo del proyecto",
+  "timestamp": "2026-11-15T12:00:00Z",
+  "version": 1,
+  "statements": [
+    {
+      "vulnerability": {
+        "name": "CVE-2026-59873",
+        "aliases": ["GHSA-23hp-3jrh-7fpw"]
+      },
+      "products": [{ "@id": "pkg:npm/tar@6.2.1" }],
+      "status": "not_affected",
+      "justification": "vulnerable_code_not_in_execute_path",
+      "impact_statement": "La falla está en el análisis de archivos tar sin límite de tamaño. Juice Shop nunca importa tar y la versión 6.2.1 solo la usa sqlite3 con node-gyp al compilar el módulo nativo durante la instalación, con archivos de la propia herramienta de compilación. La aplicación en ejecución no descomprime tarballs enviados por usuarios."
+    }
+  ]
+}

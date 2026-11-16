@@ -1,0 +1,209 @@
+# Pipeline DevSecOps de Juice Shop. Cada etapa de seguridad tiene un umbral que hace fallar el job.
+name: DevSecOps
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Permisos mínimos por defecto. Los jobs que necesitan más lo piden por separado.
+permissions:
+  contents: read
+
+concurrency:
+  group: devsecops-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  GITLEAKS_VERSION: 8.30.1
+  GITLEAKS_SHA256: 551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb
+  SYFT_VERSION: 1.57.1
+  SYFT_SHA256: bf52519eb57f675d47c07d43213cb6dff6449f3d6d1147ff6701ed91f44eef0c
+  GRYPE_VERSION: 0.121.3
+  GRYPE_SHA256: e9da18cc1429e786722e32161288103600efffd8e483c90761f90485bd1bec85
+
+jobs:
+  # Etapa 1. Secretos con Gitleaks.
+  # Umbral: falla si algún commit nuevo del PR o del push contiene un secreto.
+  secretos:
+    name: Secretos (Gitleaks)
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Descargar el código con todo el historial
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Instalar Gitleaks con verificación de hash
+        run: |
+          curl -sSfL -o gitleaks.tar.gz \
+            "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          echo "${GITLEAKS_SHA256}  gitleaks.tar.gz" | sha256sum -c -
+          tar -xzf gitleaks.tar.gz gitleaks
+
+      - name: Buscar secretos en los commits nuevos
+        env:
+          BASE_PR: ${{ github.event.pull_request.base.sha }}
+          HEAD_PR: ${{ github.event.pull_request.head.sha }}
+          BEFORE_PUSH: ${{ github.event.before }}
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            RANGO="${BASE_PR}..${HEAD_PR}"
+          elif [ "${{ github.event_name }}" = "push" ] && [ "${BEFORE_PUSH}" != "0000000000000000000000000000000000000000" ]; then
+            RANGO="${BEFORE_PUSH}..${{ github.sha }}"
+          else
+            RANGO=""
+          fi
+          if [ -n "${RANGO}" ]; then
+            ./gitleaks detect --source . --config .gitleaks.toml --log-opts="${RANGO}" \
+              --redact --report-format sarif --report-path gitleaks.sarif --verbose
+          else
+            ./gitleaks detect --source . --config .gitleaks.toml \
+              --redact --report-format sarif --report-path gitleaks.sarif --verbose
+          fi
+
+      - name: Guardar el reporte
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: gitleaks-sarif
+          path: gitleaks.sarif
+          if-no-files-found: ignore
+
+  # Etapa 2. SAST con Semgrep y salida SARIF.
+  # Umbral: falla si el cambio introduce un hallazgo de severidad ERROR.
+  # Los hallazgos que ya existían en el fork se informan pero no bloquean.
+  sast:
+    name: SAST (Semgrep)
+    runs-on: ubuntu-24.04
+    container:
+      image: semgrep/semgrep:1.185.0
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - name: Descargar el código con todo el historial
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Permitir que git lea el directorio dentro del contenedor
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+      - name: Análisis completo con salida SARIF
+        run: >-
+          semgrep scan
+          --config .semgrep/juice-shop.yml
+          --config p/default
+          --config p/owasp-top-ten
+          --metrics=off
+          --sarif --output semgrep.sarif
+
+      - name: Subir el SARIF a Code scanning
+        if: always()
+        uses: github/codeql-action/upload-sarif@33d7b85da1a04171e211befe2c739303b9a4c066 # v4.39.3
+        with:
+          sarif_file: semgrep.sarif
+          category: semgrep
+
+      - name: Guardar el reporte
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: semgrep-sarif
+          path: semgrep.sarif
+
+      - name: Bloquear hallazgos nuevos de severidad ERROR
+        if: github.event_name != 'workflow_dispatch'
+        env:
+          BASE_PR: ${{ github.event.pull_request.base.sha }}
+          BEFORE_PUSH: ${{ github.event.before }}
+        run: |
+          BASE="${BASE_PR:-$BEFORE_PUSH}"
+          if [ -z "${BASE}" ] || [ "${BASE}" = "0000000000000000000000000000000000000000" ]; then
+            echo "No hay commit base para comparar, se omite el bloqueo."
+            exit 0
+          fi
+          semgrep scan \
+            --config .semgrep/juice-shop.yml --config p/default --config p/owasp-top-ten \
+            --metrics=off --baseline-commit "${BASE}" --severity ERROR --error
+
+  # Etapa 3. SCA: SBOM en CycloneDX con Syft y escaneo con Grype.
+  # Umbral: falla si aparece una vulnerabilidad High o Critical que no está en la línea base
+  # o si hay un componente con licencia GPL o AGPL.
+  sca:
+    name: SCA (Syft y Grype)
+    runs-on: ubuntu-24.04
+    env:
+      DTRACK_URL: ${{ secrets.DTRACK_URL }}
+      DTRACK_API_KEY: ${{ secrets.DTRACK_API_KEY }}
+    steps:
+      - name: Descargar el código
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Generar los lockfiles sin instalar paquetes
+        run: |
+          npm install --package-lock-only --ignore-scripts --no-audit --no-fund
+          npm install --package-lock-only --ignore-scripts --no-audit --no-fund --prefix frontend
+
+      - name: Instalar Syft y Grype con verificación de hash
+        run: |
+          curl -sSfL -o syft.tar.gz "https://github.com/anchore/syft/releases/download/v${SYFT_VERSION}/syft_${SYFT_VERSION}_linux_amd64.tar.gz"
+          curl -sSfL -o grype.tar.gz "https://github.com/anchore/grype/releases/download/v${GRYPE_VERSION}/grype_${GRYPE_VERSION}_linux_amd64.tar.gz"
+          echo "${SYFT_SHA256}  syft.tar.gz" | sha256sum -c -
+          echo "${GRYPE_SHA256}  grype.tar.gz" | sha256sum -c -
+          tar -xzf syft.tar.gz syft
+          tar -xzf grype.tar.gz grype
+
+      - name: Generar el SBOM en CycloneDX
+        run: >-
+          ./syft dir:.
+          --exclude './node_modules/**' --exclude './security/**' --exclude './.git/**'
+          --source-name juice-shop --source-version "${GITHUB_SHA}"
+          -o cyclonedx-json=sbom.cdx.json
+
+      - name: Guardar el SBOM
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: sbom-cyclonedx
+          path: sbom.cdx.json
+
+      - name: Escanear vulnerabilidades con Grype y aplicar el VEX
+        run: ./grype sbom:sbom.cdx.json --vex security/vex/openvex.json -o table -o json=grype.json
+
+      - name: Guardar el reporte de Grype
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: grype-json
+          path: grype.json
+          if-no-files-found: ignore
+
+      - name: Revisar licencias
+        run: |
+          jq -r '.components[] | select(.licenses != null) | .name as $n | .licenses[] | (.license.id // .license.name // .expression // "") as $l | "\($n)|\($l)"' sbom.cdx.json \
+            | grep -E '\|(AGPL|GPL)' > licencias-prohibidas.txt || true
+          if [ -s licencias-prohibidas.txt ]; then
+            echo "Componentes con licencia GPL o AGPL:"; cat licencias-prohibidas.txt; exit 1
+          fi
+          echo "No hay componentes con licencia GPL o AGPL."
+
+      - name: Bloquear vulnerabilidades High o Critical nuevas
+        run: |
+          jq -r '.matches[] | select(.vulnerability.severity=="High" or .vulnerability.severity=="Critical") | "\(.vulnerability.id)|\(.artifact.name)|\(.artifact.version)"' grype.json | sort -u > actuales.txt
+          sort -u security/sbom/baseline-grype.txt > base.txt
+          comm -23 actuales.txt base.txt > nuevas.txt
+          if [ -s nuevas.txt ]; then
+            echo "Vulnerabilidades High o Critical que no estaban en la línea base:"; cat nuevas.txt; exit 1
+          fi
+          echo "No hay vulnerabilidades High o Critical nuevas."
+
+      - name: Publicar el SBOM en Dependency-Track
+        if: env.DTRACK_URL != '' && github.event_name != 'pull_request'
+        run: |
+          curl -sSf -X POST "${DTRACK_URL}/api/v1/bom" \
+            -H "X-Api-Key: ${DTRACK_API_KEY}" \
+            -F "autoCreate=true" -F "projectName=juice-shop" -F "projectVersion=${GITHUB_REF_NAME}" \
+            -F "bom=@sbom.cdx.json"

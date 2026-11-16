@@ -1,0 +1,68 @@
+rules:
+  - id: juiceshop-ssrf-fetch-url
+    mode: taint
+    languages: [typescript, javascript]
+    severity: ERROR
+    message: >-
+      Un valor que viene de la petición llega a fetch sin validar el destino. Hay que usar una lista
+      de hosts permitidos y bloquear IP privadas y de loopback.
+    pattern-sources:
+      - pattern-either:
+          - pattern: req.body
+          - pattern: req.query
+          - pattern: req.params
+    pattern-sinks:
+      - pattern: fetch(...)
+    metadata:
+      amenaza: T11
+      asvs: V5.2.6
+      cwe: CWE-918
+
+  - id: juiceshop-md5-password-hash
+    languages: [typescript, javascript]
+    severity: WARNING
+    message: >-
+      MD5 no sirve para guardar contraseñas. Se debe usar un hash adaptativo con sal como bcrypt o argon2.
+    pattern: $C.createHash('md5')
+    metadata:
+      amenaza: T10
+      asvs: V2.4.1
+      cwe: CWE-328
+
+  - id: juiceshop-zip-path-includes
+    languages: [typescript, javascript]
+    severity: ERROR
+    message: >-
+      La ruta de un archivo del zip se valida con includes. Hay que resolver la ruta final y comprobar
+      que empieza por el directorio de destino para evitar escribir fuera de él.
+    pattern: $ABS.includes(path.resolve('.'))
+    metadata:
+      amenaza: T18
+      asvs: V12.3.1
+      cwe: CWE-22
+
+  - id: juiceshop-vm-run-in-context
+    languages: [typescript, javascript]
+    severity: WARNING
+    message: >-
+      Se ejecuta código con vm.runInContext. El módulo vm no es un sandbox de seguridad y si el código
+      depende de datos del usuario se puede escapar de él.
+    pattern: vm.runInContext(...)
+    metadata:
+      amenaza: T17
+      asvs: V5.2.4
+      cwe: CWE-94
+
+  - id: juiceshop-xxe-external-entities
+    languages: [typescript, javascript]
+    severity: ERROR
+    message: >-
+      El analizador XML se configura para sustituir entidades y cargar DTD externas, lo que permite XXE.
+      Estas opciones deben quitarse.
+    pattern-either:
+      - pattern: $L.ParseOption.XML_PARSE_NOENT
+      - pattern: $L.ParseOption.XML_PARSE_DTDLOAD
+    metadata:
+      amenaza: T12
+      asvs: V5.5.2
+      cwe: CWE-611

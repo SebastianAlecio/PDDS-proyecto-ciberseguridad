@@ -1,0 +1,18 @@
+title = "Gitleaks para Juice Shop"
+
+[extend]
+useDefault = true
+
+# Juice Shop es vulnerable a propósito. Estas rutas solo traen credenciales y tokens de ejemplo
+# para pruebas y datos de arranque, así que no se tratan como secretos reales.
+[allowlist]
+description = "Pruebas y datos de ejemplo de Juice Shop"
+paths = [
+  '''^test/''',
+  '''\.spec\.ts$''',
+  '''^cypress/''',
+  '''^data/static/users\.yml$''',
+  '''^data/static/codefixes/''',
+  '''^frontend/src/assets/i18n/''',
+  '''^i18n/''',
+]

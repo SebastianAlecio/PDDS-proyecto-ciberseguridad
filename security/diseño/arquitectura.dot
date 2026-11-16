@@ -1,0 +1,26 @@
+digraph arquitectura {
+  rankdir=LR; compound=true; nodesep=0.35; ranksep=0.7; splines=true;
+  node [shape=box, fontname="Helvetica", fontsize=11, style="rounded", color="black", fontcolor="black"];
+  edge [fontname="Helvetica", fontsize=9, color="black", fontcolor="black"];
+
+  subgraph cluster_cliente { label="Navegador del usuario"; fontname="Helvetica-Bold"; fontsize=12; style=dashed;
+    spa [label="Frontend Angular\n(SPA)"]; }
+  subgraph cluster_operacion { label="Operación"; fontname="Helvetica-Bold"; fontsize=12; style=dashed;
+    prom [label="Prometheus"]; b2b [label="Cliente B2B"]; }
+
+  subgraph cluster_app { label="Contenedor Docker (Node.js, imagen distroless, usuario 65532, puerto 3000)"; fontname="Helvetica-Bold"; fontsize=12; style=solid;
+    web [label="Servidor de contenido\n(SPA, /ftp, /support/logs)"];
+    api [label="API REST (Express)\n/rest, /api, /b2b\nJWT, helmet, rate limit\nsocket.io"];
+    sql [label="Base SQLite\ndata/juiceshop.sqlite", shape=cylinder];
+    mars [label="MarsDB\n(reseñas y pedidos, memoria)", shape=cylinder];
+    fs [label="Sistema de archivos\nftp, uploads, logs,\nencryptionkeys", shape=folder];
+  }
+
+  subgraph cluster_ext { label="Servicios externos"; fontname="Helvetica-Bold"; fontsize=12; style=dashed;
+    llm [label="Servicio LLM\n(Ollama)"]; hook [label="Webhook de soluciones"]; ext [label="Sitios externos\n(imagen de perfil por URL)"]; }
+
+  spa -> web [label="HTTP"]; spa -> api [label="HTTP, JSON, JWT"];
+  b2b -> api [label="HTTP, XML/JSON"]; prom -> api [label="/metrics"];
+  web -> fs [label="lee"]; api -> sql [label="Sequelize"]; api -> mars; api -> fs [label="escribe"];
+  api -> llm [label="chatbot"]; api -> hook [label="notificación"]; api -> ext [label="descarga"];
+}
