@@ -123,6 +123,7 @@
     "jsonwebtoken": "0.4.0",
     "libxml2-wasm": "^0.7.1",
     "marsdb": "^0.6.11",
+    "minimist": "0.0.8",
     "material-icons": "^1.13.14",
     "morgan": "^1.10.0",
     "multer": "^2.4.0",
