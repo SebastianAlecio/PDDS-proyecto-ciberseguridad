@@ -145,7 +145,7 @@ jobs:
 
       - name: Generar los lockfiles sin instalar paquetes
         run: |
-          npm install -g npm@11.7.0
+          sudo npm install -g npm@11.7.0
           npm install --package-lock-only --ignore-scripts --no-audit --no-fund
           cd frontend
           npm install --package-lock-only --ignore-scripts --no-audit --no-fund
