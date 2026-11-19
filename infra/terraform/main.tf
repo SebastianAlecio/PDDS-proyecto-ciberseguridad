@@ -9,25 +9,26 @@ resource "aws_security_group" "web" {
   description = "Acceso al servidor de Juice Shop"
 
   ingress {
-    description = "SSH desde cualquier lugar"
+    description = "SSH solo desde la red de administracion"
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["10.10.0.0/24"]
   }
 
   ingress {
-    description = "Aplicacion web"
+    description = "Aplicacion web solo desde el balanceador"
     from_port   = 3000
     to_port     = 3000
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["10.0.0.0/16"]
   }
 
   egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
+    description = "HTTPS hacia afuera para paquetes e imagenes"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
