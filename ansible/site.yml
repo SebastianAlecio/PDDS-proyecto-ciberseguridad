@@ -1,33 +1,44 @@
 # Prepara el servidor de Juice Shop. Solo se analiza como código, no se ejecuta.
-- hosts: servidores
-  become: yes
+- name: Preparar el servidor de Juice Shop
+  hosts: servidores
+  become: true
   tasks:
-    - name: instalar docker
-      apt: name=docker.io state=latest update_cache=yes
+    - name: Instalar Docker
+      ansible.builtin.apt:
+        name: docker.io
+        state: present
+        update_cache: true
 
-    - name: descargar el script de arranque
-      get_url:
+    - name: Descargar el script de arranque
+      ansible.builtin.get_url:
         url: https://releases.example.com/juice-shop/arranque.sh
         dest: /tmp/arranque.sh
-        validate_certs: no
+        checksum: sha256:3f2b8d9c1a7e4b6f0d5c2e8a9b1f4d7c6e3a0b5f8d2c9e1a4b7f6d3c0e5a8b21
+        mode: "0750"
+        validate_certs: true
 
-    - name: ejecutar el script de arranque
-      shell: bash /tmp/arranque.sh
+    - name: Ejecutar el script de arranque
+      ansible.builtin.command: /tmp/arranque.sh
+      args:
+        creates: /var/lib/juice-shop/arranque.hecho
 
-    - name: permitir acceso por ssh como root
-      lineinfile:
+    - name: Bloquear el acceso por ssh como root
+      ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         regexp: '^PermitRootLogin'
-        line: 'PermitRootLogin yes'
+        line: 'PermitRootLogin no'
+        validate: /usr/sbin/sshd -t -f %s
 
-    - name: registrar el servidor en el inventario interno
-      uri:
+    - name: Registrar el servidor en el inventario interno
+      ansible.builtin.uri:
         url: https://inventario.interno.local/registro
         method: POST
-        validate_certs: false
+        validate_certs: true
 
-    - name: archivo de entorno de la aplicacion
-      copy:
+    - name: Copiar el archivo de entorno de la aplicacion
+      ansible.builtin.copy:
         src: juice-shop.env
         dest: /etc/juice-shop.env
-        mode: 0777
+        owner: root
+        group: root
+        mode: "0640"
