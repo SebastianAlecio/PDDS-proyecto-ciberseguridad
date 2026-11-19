@@ -34,3 +34,11 @@ updates:
     cooldown:
       default-days: 7
     labels: ["dependencias"]
+  # Imagen base del Dockerfile endurecido
+  - package-ecosystem: "docker"
+    directory: "/docker"
+    schedule:
+      interval: "weekly"
+    cooldown:
+      default-days: 7
+    labels: ["dependencias"]
