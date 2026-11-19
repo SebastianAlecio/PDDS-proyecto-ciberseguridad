@@ -1,0 +1,85 @@
+# Análisis de seguridad de la infraestructura como código (Terraform, Ansible y Dockerfile).
+# Primero genera los reportes SARIF sin bloquear y después aplica los gates que sí detienen el PR.
+name: Seguridad IaC
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# Permisos mínimos por defecto. El job pide security-events para subir el SARIF.
+permissions:
+  contents: read
+
+jobs:
+  iac:
+    name: Escaneo IaC
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - name: Descargar el código
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Preparar Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.13"
+
+      # Las versiones están fijas para que un cambio en las reglas de las herramientas
+      # no haga fallar de un día a otro un PR que no tocó la infraestructura.
+      # Se actualizan a propósito, en un PR aparte, y se revisan los hallazgos nuevos.
+      - name: Instalar herramientas con versión fija
+        run: pip install checkov==3.4.5 ansible-core==2.22.0 ansible-lint==26.11.0
+
+      # 1) Reportes: no bloquean, solo generan los archivos SARIF.
+      - name: Checkov, reporte SARIF
+        run: |
+          mkdir -p reportes
+          checkov -d infra -d ansible -d docker \
+            --external-checks-dir politicas \
+            -o sarif --output-file-path reportes --soft-fail
+
+      - name: ansible-lint, reporte SARIF
+        run: ansible-lint -f sarif ansible/ > reportes/ansible-lint.sarif || true
+
+      - name: Publicar el SARIF de Checkov en Code scanning
+        if: always()
+        uses: github/codeql-action/upload-sarif@33d7b85da1a04171e211befe2c739303b9a4c066 # v4.39.3
+        with:
+          sarif_file: reportes/results_sarif.sarif
+          category: checkov
+
+      - name: Publicar el SARIF de ansible-lint en Code scanning
+        if: always()
+        uses: github/codeql-action/upload-sarif@33d7b85da1a04171e211befe2c739303b9a4c066 # v4.39.3
+        with:
+          sarif_file: reportes/ansible-lint.sarif
+          category: ansible-lint
+
+      - name: Guardar los reportes
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: reportes-iac
+          path: reportes/
+          if-no-files-found: ignore
+
+      # 2) Gates: si fallan, el job falla y el PR no se puede fusionar.
+      # Se escanea una carpeta a la vez porque con varios -d Checkov repite los resultados
+      # y los conteos salen inflados. El gate falla si cualquiera de las tres tiene fallas.
+      - name: Gate Checkov
+        run: |
+          fallo=0
+          for carpeta in infra ansible docker; do
+            echo "== Checkov en ${carpeta}/"
+            checkov -d "${carpeta}" --external-checks-dir politicas --compact --quiet || fallo=1
+          done
+          exit "${fallo}"
+
+      - name: Validar la sintaxis de Ansible
+        run: ansible-playbook -i ansible/inventory.ini ansible/site.yml --syntax-check
+
+      - name: Gate ansible-lint, perfil production
+        run: ansible-lint --profile production ansible/

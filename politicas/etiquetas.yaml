@@ -1,0 +1,20 @@
+metadata:
+  id: "CKV2_JUICE_1"
+  name: "Todo recurso de AWS debe llevar las etiquetas Proyecto y Responsable"
+  category: "GENERAL_SECURITY"
+definition:
+  and:
+    - cond_type: "attribute"
+      resource_types:
+        - "aws_instance"
+        - "aws_ebs_volume"
+        - "aws_security_group"
+      attribute: "tags.Proyecto"
+      operator: "exists"
+    - cond_type: "attribute"
+      resource_types:
+        - "aws_instance"
+        - "aws_ebs_volume"
+        - "aws_security_group"
+      attribute: "tags.Responsable"
+      operator: "exists"

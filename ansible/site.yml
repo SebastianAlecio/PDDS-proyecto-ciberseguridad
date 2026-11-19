@@ -1,0 +1,33 @@
+# Prepara el servidor de Juice Shop. Solo se analiza como código, no se ejecuta.
+- hosts: servidores
+  become: yes
+  tasks:
+    - name: instalar docker
+      apt: name=docker.io state=latest update_cache=yes
+
+    - name: descargar el script de arranque
+      get_url:
+        url: https://releases.example.com/juice-shop/arranque.sh
+        dest: /tmp/arranque.sh
+        validate_certs: no
+
+    - name: ejecutar el script de arranque
+      shell: bash /tmp/arranque.sh
+
+    - name: permitir acceso por ssh como root
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^PermitRootLogin'
+        line: 'PermitRootLogin yes'
+
+    - name: registrar el servidor en el inventario interno
+      uri:
+        url: https://inventario.interno.local/registro
+        method: POST
+        validate_certs: false
+
+    - name: archivo de entorno de la aplicacion
+      copy:
+        src: juice-shop.env
+        dest: /etc/juice-shop.env
+        mode: 0777
