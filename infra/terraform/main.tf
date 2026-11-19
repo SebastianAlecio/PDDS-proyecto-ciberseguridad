@@ -58,7 +58,8 @@ resource "aws_instance" "servidor" {
 }
 
 resource "aws_ebs_volume" "datos" {
+  # checkov:skip=CKV_AWS_189: se usa la llave administrada aws/ebs y no una CMK porque el volumen solo guarda los datos de la tienda de demostración y una CMK agrega costo y gestión de llaves. Aprobado por el responsable de seguridad del equipo en el PR #15, vence el 2027-03-31
   availability_zone = "us-east-1a"
   size              = 10
-  encrypted         = false
+  encrypted         = true
 }
