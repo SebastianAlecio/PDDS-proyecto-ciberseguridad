@@ -31,6 +31,11 @@ resource "aws_security_group" "web" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
+  tags = {
+    Proyecto    = "juice-shop"
+    Responsable = "equipo-devsecops"
+  }
 }
 
 data "aws_iam_policy_document" "confianza_ec2" {
@@ -81,7 +86,9 @@ resource "aws_instance" "servidor" {
   }
 
   tags = {
-    Name = "juice-shop"
+    Name        = "juice-shop"
+    Proyecto    = "juice-shop"
+    Responsable = "equipo-devsecops"
   }
 }
 
@@ -90,4 +97,9 @@ resource "aws_ebs_volume" "datos" {
   availability_zone = "us-east-1a"
   size              = 10
   encrypted         = true
+
+  tags = {
+    Proyecto    = "juice-shop"
+    Responsable = "equipo-devsecops"
+  }
 }
