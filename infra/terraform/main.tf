@@ -9,11 +9,11 @@ resource "aws_security_group" "web" {
   description = "Acceso al servidor de Juice Shop"
 
   ingress {
-    description = "SSH solo desde la red de administracion"
+    description = "SSH desde cualquier lugar"
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["10.10.0.0/24"]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
