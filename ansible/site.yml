@@ -9,7 +9,8 @@
       get_url:
         url: https://releases.example.com/juice-shop/arranque.sh
         dest: /tmp/arranque.sh
-        validate_certs: no
+        checksum: sha256:3f2b8d9c1a7e4b6f0d5c2e8a9b1f4d7c6e3a0b5f8d2c9e1a4b7f6d3c0e5a8b21
+        validate_certs: true
 
     - name: ejecutar el script de arranque
       shell: bash /tmp/arranque.sh
@@ -24,7 +25,7 @@
       uri:
         url: https://inventario.interno.local/registro
         method: POST
-        validate_certs: false
+        validate_certs: true
 
     - name: archivo de entorno de la aplicacion
       copy:
