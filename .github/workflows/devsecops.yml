@@ -23,6 +23,8 @@ env:
   SYFT_SHA256: bf52519eb57f675d47c07d43213cb6dff6449f3d6d1147ff6701ed91f44eef0c
   GRYPE_VERSION: 0.121.3
   GRYPE_SHA256: e9da18cc1429e786722e32161288103600efffd8e483c90761f90485bd1bec85
+  TRIVY_VERSION: 0.76.0
+  TRIVY_SHA256: e24b1c51293c1b15e4ba8d45bbc7891ba053f90278ec2698f3562c993e145fe7
 
 jobs:
   # Etapa 1. Secretos con Gitleaks.
@@ -209,3 +211,95 @@ jobs:
             -H "X-Api-Key: ${DTRACK_API_KEY}" \
             -F "autoCreate=true" -F "projectName=juice-shop" -F "projectVersion=${GITHUB_REF_NAME}" \
             -F "bom=@sbom.cdx.json"
+
+  # Etapa 4. Build de la imagen endurecida de docker/Dockerfile.
+  # Umbral: falla si la imagen no se construye o si no queda en estado healthy al arrancar.
+  build:
+    name: Build de la imagen
+    runs-on: ubuntu-24.04
+    needs: [secretos, sast, sca]
+    steps:
+      - name: Descargar el código
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Construir la imagen
+        run: docker build -f docker/Dockerfile -t juice-shop:ci .
+
+      - name: Comprobar que arranca y queda healthy
+        run: |
+          docker run -d --name juice-ci -p 3000:3000 juice-shop:ci
+          for i in $(seq 1 30); do
+            estado=$(docker inspect --format '{{.State.Health.Status}}' juice-ci)
+            echo "healthcheck: ${estado}"
+            [ "${estado}" = "healthy" ] && exit 0
+            sleep 10
+          done
+          docker logs juice-ci
+          exit 1
+
+      - name: Guardar la imagen
+        run: docker save juice-shop:ci | gzip > imagen.tar.gz
+
+      - name: Subir la imagen como artefacto
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: imagen-juice-shop
+          path: imagen.tar.gz
+          retention-days: 1
+
+  # Etapa 5. Escaneo de la imagen con Trivy.
+  # Umbral: falla si hay una vulnerabilidad High o Critical con corrección en los paquetes del sistema
+  # o una High o Critical nueva en las dependencias de Node respecto de la línea base.
+  imagen:
+    name: Imagen (Trivy)
+    runs-on: ubuntu-24.04
+    needs: build
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - name: Descargar el código
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Descargar la imagen
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: imagen-juice-shop
+
+      - name: Instalar Trivy con verificación de hash
+        run: |
+          curl -sSfL -o trivy.tar.gz "https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz"
+          echo "${TRIVY_SHA256}  trivy.tar.gz" | sha256sum -c -
+          tar -xzf trivy.tar.gz trivy
+          gunzip imagen.tar.gz
+
+      - name: Reporte SARIF de la imagen
+        run: ./trivy image --input imagen.tar --scanners vuln --severity HIGH,CRITICAL --format sarif --output trivy.sarif --exit-code 0
+
+      - name: Subir el SARIF a Code scanning
+        if: always()
+        uses: github/codeql-action/upload-sarif@33d7b85da1a04171e211befe2c739303b9a4c066 # v4.39.3
+        with:
+          sarif_file: trivy.sarif
+          category: trivy-imagen
+
+      - name: Guardar el reporte
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: trivy-sarif
+          path: trivy.sarif
+
+      - name: Bloquear High o Critical con corrección en los paquetes del sistema
+        run: ./trivy image --input imagen.tar --scanners vuln --pkg-types os --severity HIGH,CRITICAL --ignore-unfixed --exit-code 1
+
+      - name: Bloquear High o Critical nuevas en las dependencias de Node
+        run: |
+          ./trivy image --input imagen.tar --scanners vuln --pkg-types library --severity HIGH,CRITICAL --format json --output trivy.json
+          jq -r '.Results[]? | select(.Class=="lang-pkgs") | .Vulnerabilities[]? | "\(.VulnerabilityID)|\(.PkgName)|\(.InstalledVersion)"' trivy.json | sort -u > actuales-imagen.txt
+          sort -u security/sbom/baseline-trivy.txt > base-imagen.txt
+          comm -23 actuales-imagen.txt base-imagen.txt > nuevas-imagen.txt
+          if [ -s nuevas-imagen.txt ]; then
+            echo "Vulnerabilidades High o Critical que no estaban en la línea base:"; cat nuevas-imagen.txt; exit 1
+          fi
+          echo "No hay vulnerabilidades High o Critical nuevas en la imagen."
