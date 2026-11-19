@@ -6,7 +6,7 @@
     - name: Instalar Docker
       ansible.builtin.apt:
         name: docker.io
-        state: latest
+        state: present
         update_cache: true
 
     - name: Descargar el script de arranque
@@ -14,10 +14,13 @@
         url: https://releases.example.com/juice-shop/arranque.sh
         dest: /tmp/arranque.sh
         checksum: sha256:3f2b8d9c1a7e4b6f0d5c2e8a9b1f4d7c6e3a0b5f8d2c9e1a4b7f6d3c0e5a8b21
+        mode: "0750"
         validate_certs: true
 
     - name: Ejecutar el script de arranque
-      ansible.builtin.shell: bash /tmp/arranque.sh
+      ansible.builtin.command: /tmp/arranque.sh
+      args:
+        creates: /var/lib/juice-shop/arranque.hecho
 
     - name: Permitir acceso por ssh como root
       ansible.builtin.lineinfile:
@@ -35,4 +38,6 @@
       ansible.builtin.copy:
         src: juice-shop.env
         dest: /etc/juice-shop.env
-        mode: 0777
+        owner: root
+        group: root
+        mode: "0640"
