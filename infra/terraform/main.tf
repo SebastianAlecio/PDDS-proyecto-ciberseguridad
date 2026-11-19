@@ -33,6 +33,33 @@ resource "aws_security_group" "web" {
   }
 }
 
+data "aws_iam_policy_document" "confianza_ec2" {
+  statement {
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["ec2.amazonaws.com"]
+    }
+  }
+}
+
+# Rol para administrar el servidor con Session Manager en lugar de abrir SSH.
+resource "aws_iam_role" "servidor" {
+  name               = "juice-shop-servidor"
+  assume_role_policy = data.aws_iam_policy_document.confianza_ec2.json
+}
+
+resource "aws_iam_role_policy_attachment" "ssm" {
+  role       = aws_iam_role.servidor.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
+
+resource "aws_iam_instance_profile" "servidor" {
+  name = "juice-shop-servidor"
+  role = aws_iam_role.servidor.name
+}
+
 resource "aws_instance" "servidor" {
   ami                         = "ami-0c02fb55956c7d316"
   instance_type               = "t3.micro"
@@ -40,6 +67,7 @@ resource "aws_instance" "servidor" {
   associate_public_ip_address = false
   monitoring                  = true
   ebs_optimized               = true
+  iam_instance_profile        = aws_iam_instance_profile.servidor.name
 
   # IMDSv2 obligatorio, para que un SSRF no pueda leer las credenciales de la instancia.
   metadata_options {
