@@ -1,0 +1,92 @@
+# Plan de ZAP Automation Framework para el escaneo completo y autenticado de Juice Shop.
+# Variables que se esperan en el entorno: OBJETIVO (por ejemplo http://juice:3000) y ZAP_TOKEN (JWT de un usuario de prueba).
+env:
+  contexts:
+    - name: juice-shop
+      urls:
+        - ${OBJETIVO}
+      includePaths:
+        - ${OBJETIVO}.*
+      excludePaths:
+        - ${OBJETIVO}/ftp.*
+        - ${OBJETIVO}/rest/memories.*
+        - ${OBJETIVO}/rest/chatbot.*
+  parameters:
+    failOnError: true
+    failOnWarning: false
+    progressToStdout: true
+
+jobs:
+  # Agrega el token del usuario de prueba a todas las peticiones, esto hace el escaneo autenticado.
+  - type: replacer
+    parameters:
+      deleteAllRules: true
+    rules:
+      - description: Cabecera Authorization del usuario de prueba
+        matchType: req_header
+        matchString: Authorization
+        matchRegex: false
+        replacementString: Bearer ${ZAP_TOKEN}
+        initiators: []
+
+  - type: passiveScan-config
+    parameters:
+      maxAlertsPerRule: 10
+
+  # Descubrimiento a partir de la definición OpenAPI de la API B2B.
+  - type: openapi
+    parameters:
+      apiFile: /zap/wrk/swagger.yml
+      targetUrl: ${OBJETIVO}/b2b/v2
+      context: juice-shop
+
+  # Endpoints que solo responden con sesión iniciada.
+  - type: requestor
+    requests:
+      - url: ${OBJETIVO}/rest/user/whoami
+        method: GET
+      - url: ${OBJETIVO}/rest/basket/1
+        method: GET
+      - url: ${OBJETIVO}/api/Users
+        method: GET
+      - url: ${OBJETIVO}/api/Addresss
+        method: GET
+      - url: ${OBJETIVO}/rest/products/search?q=
+        method: GET
+      - url: ${OBJETIVO}/api/Products
+        method: GET
+      - url: ${OBJETIVO}/rest/order-history
+        method: GET
+
+  - type: spider
+    parameters:
+      context: juice-shop
+      maxDuration: 3
+
+  - type: spiderAjax
+    parameters:
+      context: juice-shop
+      maxDuration: 4
+      browserId: firefox-headless
+
+  - type: passiveScan-wait
+    parameters:
+      maxDuration: 5
+
+  - type: activeScan
+    parameters:
+      context: juice-shop
+      threadPerHost: 2
+      maxRuleDurationInMins: 2
+      maxScanDurationInMins: 25
+
+  - type: report
+    parameters:
+      template: traditional-json
+      reportDir: /zap/wrk
+      reportFile: completo-autenticado
+  - type: report
+    parameters:
+      template: traditional-html
+      reportDir: /zap/wrk
+      reportFile: completo-autenticado
