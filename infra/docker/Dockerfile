@@ -1,5 +1,5 @@
 # Imagen endurecida de Juice Shop: versiones fijas, base mínima sin shell y sin usuario root.
-FROM node:24.22.3-bookworm AS construccion
+FROM node:26.13.0-bookworm AS construccion
 WORKDIR /juice-shop
 COPY . .
 RUN npm install -g typescript@6.0.3 \
