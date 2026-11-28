@@ -1,0 +1,61 @@
+# Escaneo completo y autenticado con ZAP. Corre cada semana o a pedido, no en cada pull request porque tarda.
+name: DAST completo
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  zap-completo:
+    name: ZAP completo y autenticado
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    env:
+      ZAP_IMAGE: ghcr.io/zaproxy/zaproxy@sha256:9624669db72f54d86c4b46a7064518bd9bf79d8c61a4c31befa9923489f328af
+    steps:
+      - name: Descargar el código
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Construir y levantar la aplicación
+        run: |
+          docker build -f docker/Dockerfile -t juice-shop:ci .
+          docker network create dast
+          docker run -d --name juice --network dast juice-shop:ci
+          for i in $(seq 1 30); do
+            estado=$(docker inspect --format '{{.State.Health.Status}}' juice)
+            [ "${estado}" = "healthy" ] && exit 0
+            sleep 10
+          done
+          docker logs juice
+          exit 1
+
+      - name: Crear el usuario de prueba y obtener su token
+        run: |
+          clave="Zap-$(openssl rand -hex 8)"
+          docker run --rm --network dast curlimages/curl:8.11.1 -sf -X POST http://juice:3000/api/Users \
+            -H 'Content-Type: application/json' \
+            -d "{\"email\":\"zap-prueba@dast.local\",\"password\":\"${clave}\",\"passwordRepeat\":\"${clave}\",\"securityQuestion\":{\"id\":1},\"securityAnswer\":\"x\"}" > /dev/null
+          token=$(docker run --rm --network dast curlimages/curl:8.11.1 -sf -X POST http://juice:3000/rest/user/login \
+            -H 'Content-Type: application/json' \
+            -d "{\"email\":\"zap-prueba@dast.local\",\"password\":\"${clave}\"}" | jq -r '.authentication.token')
+          echo "::add-mask::${token}"
+          echo "ZAP_TOKEN=${token}" >> "$GITHUB_ENV"
+
+      - name: Ejecutar el plan de Automation Framework
+        run: |
+          mkdir -p zap-salida
+          cp .zap/plan.yaml swagger.yml zap-salida/
+          chmod 777 zap-salida
+          docker run --rm --network dast -e OBJETIVO=http://juice:3000 -e ZAP_TOKEN \
+            -v "${PWD}/zap-salida:/zap/wrk:rw" "${ZAP_IMAGE}" zap.sh -cmd -autorun /zap/wrk/plan.yaml
+
+      - name: Guardar los reportes de ZAP
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: zap-completo
+          path: zap-salida/
