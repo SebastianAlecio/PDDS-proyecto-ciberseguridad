@@ -90,3 +90,8 @@ jobs:
       template: traditional-html
       reportDir: /zap/wrk
       reportFile: completo-autenticado
+  - type: report
+    parameters:
+      template: traditional-xml
+      reportDir: /zap/wrk
+      reportFile: completo-autenticado
