@@ -342,7 +342,7 @@ jobs:
           cp .zap/rules.tsv zap-salida/rules.tsv
           chmod 777 zap-salida
           if docker run --rm --network dast -v "${PWD}/zap-salida:/zap/wrk:rw" "${ZAP_IMAGE}" \
-            zap-baseline.py -t http://juice:3000 -c rules.tsv -J baseline.json -r baseline.html -w baseline.md -m 3; then
+            zap-baseline.py -t http://juice:3000 -c rules.tsv -J baseline.json -r baseline.html -w baseline.md -x baseline.xml -m 3; then
             codigo=0
           else
             codigo=$?
@@ -357,3 +357,31 @@ jobs:
         with:
           name: zap-baseline
           path: zap-salida/
+
+  # Etapa 7. Publicación de los reportes en DefectDojo.
+  # No bloquea el merge. Solo importa si existen los secretos DEFECTDOJO_URL y DEFECTDOJO_TOKEN y el evento no es un pull request.
+  publicacion:
+    name: Publicación en DefectDojo
+    runs-on: ubuntu-24.04
+    needs: [secretos, sast, sca, imagen, dast]
+    if: ${{ always() && !cancelled() }}
+    env:
+      DEFECTDOJO_URL: ${{ secrets.DEFECTDOJO_URL }}
+      DEFECTDOJO_TOKEN: ${{ secrets.DEFECTDOJO_TOKEN }}
+    steps:
+      - name: Descargar el código
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Descargar los reportes de las etapas anteriores
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          path: reportes
+          pattern: "{gitleaks-sarif,semgrep-sarif,sbom-cyclonedx,grype-json,trivy-sarif,zap-baseline}"
+
+      - name: Importar en DefectDojo
+        if: env.DEFECTDOJO_URL != '' && github.event_name != 'pull_request'
+        run: security/defectdojo/importar.sh reportes
+
+      - name: Aviso si no se importó
+        if: env.DEFECTDOJO_URL == '' || github.event_name == 'pull_request'
+        run: echo "No se importó en DefectDojo porque no hay secretos configurados o el evento es un pull request."
