@@ -37,12 +37,12 @@ jobs:
       - name: Checkov, reporte SARIF
         run: |
           mkdir -p reportes
-          checkov -d infra -d ansible -d docker \
+          checkov -d infra \
             --external-checks-dir politicas \
             -o sarif --output-file-path reportes --soft-fail
 
       - name: ansible-lint, reporte SARIF
-        run: ansible-lint -f sarif ansible/ > reportes/ansible-lint.sarif || true
+        run: ansible-lint -f sarif infra/ansible/ > reportes/ansible-lint.sarif || true
 
       - name: Publicar el SARIF de Checkov en Code scanning
         if: always()
@@ -68,18 +68,18 @@ jobs:
 
       # 2) Gates: si fallan, el job falla y el PR no se puede fusionar.
       # Se escanea una carpeta a la vez porque con varios -d Checkov repite los resultados
-      # y los conteos salen inflados. El gate falla si cualquiera de las tres tiene fallas.
+      # y los conteos salen inflados. El gate falla si cualquiera de las carpetas tiene fallas.
       - name: Gate Checkov
         run: |
           fallo=0
-          for carpeta in infra ansible docker; do
+          for carpeta in infra/terraform infra/dependency-track infra/ansible infra/docker; do
             echo "== Checkov en ${carpeta}/"
             checkov -d "${carpeta}" --external-checks-dir politicas --compact --quiet || fallo=1
           done
           exit "${fallo}"
 
       - name: Validar la sintaxis de Ansible
-        run: ansible-playbook -i ansible/inventory.ini ansible/site.yml --syntax-check
+        run: ansible-playbook -i infra/ansible/inventory.ini infra/ansible/site.yml --syntax-check
 
       - name: Gate ansible-lint, perfil production
-        run: ansible-lint --profile production ansible/
+        run: ansible-lint --profile production infra/ansible/

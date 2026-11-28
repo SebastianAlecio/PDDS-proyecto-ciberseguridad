@@ -14,7 +14,7 @@ Juice Shop es vulnerable a propósito. Por eso el pipeline no exige cero hallazg
 | `.github/dependabot.yml` | Actualizaciones de npm, GitHub Actions y Docker |
 | `.semgrep/juice-shop.yml` | Reglas propias de Semgrep ligadas al modelo de amenazas |
 | `.zap/rules.tsv` y `.zap/plan.yaml` | Reglas de ZAP baseline y plan del Automation Framework |
-| `infra/`, `docker/`, `ansible/` | Terraform, Dockerfile endurecido y playbook de Ansible |
+| `infra/` | Terraform, Ansible, Dockerfile endurecido en `infra/docker/` y Dependency-Track |
 | `security/diseño/` | Arquitectura, DFD y requisitos ASVS |
 | `security/threat-model/` | Modelo de Threat Dragon y tabla de amenazas |
 | `security/sbom/` y `security/vex/` | SBOM, líneas base y declaraciones VEX |
@@ -30,7 +30,7 @@ Se ejecuta en cada pull request hacia `main`, en cada push a `main` y de forma m
 1. Secretos con Gitleaks.
 2. SAST con Semgrep, con salida SARIF a Code scanning.
 3. SCA con Syft y Grype, SBOM en CycloneDX, VEX y licencias.
-4. Build de la imagen de `docker/Dockerfile`.
+4. Build de la imagen de `infra/docker/Dockerfile`.
 5. IaC con Checkov y ansible-lint, e imagen con Trivy.
 6. DAST con ZAP baseline contra la imagen levantada en el runner.
 7. Publicación de los reportes en DefectDojo y del SBOM en Dependency-Track.
@@ -64,7 +64,7 @@ docker run --rm -v "$PWD:/src" anchore/grype:v0.121.3 sbom:/src/sbom.cdx.json --
 **Build y DAST**
 
 ```bash
-docker build -f docker/Dockerfile -t juice-shop:ci .
+docker build -f infra/docker/Dockerfile -t juice-shop:ci .
 docker network create dast
 docker run -d --name juice --network dast juice-shop:ci
 mkdir zap-salida && cp .zap/rules.tsv zap-salida/ && chmod 777 zap-salida

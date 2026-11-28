@@ -212,7 +212,7 @@ jobs:
             -F "autoCreate=true" -F "projectName=juice-shop" -F "projectVersion=${GITHUB_REF_NAME}" \
             -F "bom=@sbom.cdx.json"
 
-  # Etapa 4. Build de la imagen endurecida de docker/Dockerfile.
+  # Etapa 4. Build de la imagen endurecida de infra/docker/Dockerfile.
   # Umbral: falla si la imagen no se construye o si no queda en estado healthy al arrancar.
   build:
     name: Build de la imagen
@@ -223,7 +223,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Construir la imagen
-        run: docker build -f docker/Dockerfile -t juice-shop:ci .
+        run: docker build -f infra/docker/Dockerfile -t juice-shop:ci .
 
       - name: Comprobar que arranca y queda healthy
         run: |
