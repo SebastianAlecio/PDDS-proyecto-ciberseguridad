@@ -19,7 +19,7 @@ Lo que ya existía se reporta en el SARIF, en Code scanning y en DefectDojo y se
 | Secretos | Gitleaks | Un secreto nuevo en cualquier commit del pull request o del push | Rutas de pruebas y datos de ejemplo, que están en `.gitleaks.toml` |
 | SAST | Semgrep | Un hallazgo nuevo de severidad ERROR respecto del commit base | Hallazgos WARNING e INFO y los que ya existían |
 | SCA | Syft y Grype | Una vulnerabilidad High o Critical que no está en la línea base, o un componente con licencia GPL o AGPL | Vulnerabilidades Medium y Low y las de la línea base |
-| IaC | Checkov y ansible-lint | Cualquier falla de Checkov en `infra`, `ansible` o `docker` y cualquier incumplimiento del perfil production de ansible-lint | Nada, el repositorio está en cero fallas |
+| IaC | Checkov y ansible-lint | Cualquier falla de Checkov en `infra/` y cualquier incumplimiento del perfil production de ansible-lint | Nada, el repositorio está en cero fallas |
 | Build | Docker | La imagen no se construye o no queda healthy | No aplica |
 | Imagen | Trivy | High o Critical con corrección en los paquetes del sistema, o una High o Critical nueva en las dependencias de Node | Las vulnerabilidades de la línea base y las sin corrección |
 | DAST | ZAP baseline | Una alerta de cualquiera de las reglas en FAIL de `.zap/rules.tsv`, o un error de ZAP | Las reglas en WARN y las informativas |

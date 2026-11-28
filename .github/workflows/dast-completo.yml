@@ -22,7 +22,7 @@ jobs:
 
       - name: Construir y levantar la aplicación
         run: |
-          docker build -f docker/Dockerfile -t juice-shop:ci .
+          docker build -f infra/docker/Dockerfile -t juice-shop:ci .
           docker network create dast
           docker run -d --name juice --network dast juice-shop:ci
           for i in $(seq 1 30); do

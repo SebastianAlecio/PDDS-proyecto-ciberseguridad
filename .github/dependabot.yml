@@ -36,7 +36,7 @@ updates:
     labels: ["dependencias"]
   # Imagen base del Dockerfile endurecido
   - package-ecosystem: "docker"
-    directory: "/docker"
+    directory: "/infra/docker"
     schedule:
       interval: "weekly"
     cooldown:
