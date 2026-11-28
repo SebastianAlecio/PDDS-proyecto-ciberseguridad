@@ -22,5 +22,3 @@ GHSA-jf85-cpcp-j695|lodash|2.4.2
 GHSA-qffp-2rhf-9h96|tar|6.2.1
 GHSA-r292-9mhp-454m|tar|6.2.1
 GHSA-r6q2-hw4h-h46w|tar|6.2.1
-GHSA-rg76-677x-56q9|crypto-js|3.3.0
-GHSA-xwcq-pm8m-c4vf|crypto-js|3.3.0
