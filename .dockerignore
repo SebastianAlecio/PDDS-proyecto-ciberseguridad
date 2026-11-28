@@ -31,3 +31,8 @@ scripts/
 terraform/
 test/
 vagrant/
+
+# Documentos y reportes de seguridad del proyecto, no hacen falta en la imagen
+security/
+.zap/
+docs/
