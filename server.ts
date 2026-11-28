@@ -180,9 +180,10 @@ function configureApp (app: ReturnType<typeof express>, seq: typeof sequelize) {
   /* Compression for all requests */
   app.use(compression())
 
-  /* Bludgeon solution for possible CORS problems: Allow everything! */
-  app.options('*', cors())
-  app.use(cors())
+  /* CORS solo para los orígenes de la variable CORS_ORIGINS, separados por coma. Sin ella no se envía Access-Control-Allow-Origin. */
+  const originsPermitidos = (process.env.CORS_ORIGINS ?? '').split(',').map((origen) => origen.trim()).filter((origen) => origen !== '')
+  app.options('*', cors({ origin: originsPermitidos }))
+  app.use(cors({ origin: originsPermitidos }))
 
   /* Security middleware */
   app.use(helmet.noSniff())

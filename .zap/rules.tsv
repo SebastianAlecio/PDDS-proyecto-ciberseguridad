@@ -22,7 +22,7 @@
 20020	FAIL	Server Side Technology Version with Known Vulnerabilities
 10003	WARN	Vulnerable JS Library
 10038	WARN	Content Security Policy (CSP) Header Not Set
-10098	WARN	Cross-Domain Misconfiguration
+10098	FAIL	Cross-Domain Misconfiguration
 10017	WARN	Cross-Domain JavaScript Source File Inclusion
 90004	WARN	Cross-Origin-Embedder/Opener-Policy
 10110	WARN	Dangerous JS Functions
